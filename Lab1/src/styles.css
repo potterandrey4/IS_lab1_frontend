@@ -1,0 +1,56 @@
+/* Общие стили для всего приложения */
+body {
+  background-color: rgba(47, 76, 108, 0.66); /* Чёрный фон */
+  color: #ffffff; /* Белый текст */
+  font-family: Arial, sans-serif;
+}
+
+h1, h2 {
+  color: black; /* Красный цвет заголовков */
+  text-align: center;
+}
+
+/* Стили для контейнера форм */
+.container {
+  max-width: 400px;
+  margin: 50px auto;
+  padding: 20px;
+  border: 2px solid #410a0a; /* Красная рамка */
+  border-radius: 8px;
+  background-color: #1a1a1a; /* Темно-серый фон для форм */
+}
+
+/* Стили для кнопок */
+button {
+  background-color: #410a0a; /* Красный фон кнопок */
+  color: #ffffff; /* Белый текст на кнопках */
+  border: none;
+  border-radius: 5px;
+  padding: 10px 20px;
+  cursor: pointer;
+}
+
+button:hover {
+  background-color: #cc0000; /* Темнее при наведении */
+}
+
+/* Стили для полей ввода */
+mat-form-field {
+  width: 100%;
+  margin-bottom: 20px; /* Отступ между полями */
+}
+
+/* Стили для ошибок валидации (если нужно) */
+.mat-form-field-underline {
+  background-color: #410a0a; /* Красная линия под полем */
+}
+
+/* Стили для ссылок */
+a {
+  color: #410a0a; /* Красные ссылки */
+  text-decoration: none; /* Убираем подчеркивание */
+}
+
+a:hover {
+  text-decoration: underline; /* Подчеркивание при наведении */
+}
