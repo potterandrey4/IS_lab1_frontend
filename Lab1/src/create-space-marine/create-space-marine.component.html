@@ -1,0 +1,87 @@
+<p>create-space-marine works!</p>
+
+<!--<div class="container">-->
+<!--	<form *ngIf="spaceMarineForm" [formGroup]="spaceMarineForm" (ngSubmit)="onSubmit()">-->
+<!--		&lt;!&ndash; Поле name &ndash;&gt;-->
+<!--		<div>-->
+<!--			<label for="name">Name</label>-->
+<!--			<input id="name" formControlName="name" required />-->
+<!--			<div *ngIf="spaceMarineForm.get('name').invalid && spaceMarineForm.get('name').touched">-->
+<!--				Name is required.-->
+<!--			</div>-->
+<!--		</div>-->
+
+<!--		&lt;!&ndash; Поле coordinates &ndash;&gt;-->
+<!--		<div>-->
+<!--			<label for="x">Coordinate X ( > -585)</label>-->
+<!--			<input id="x" formControlName="coordinates.x" required />-->
+<!--			<div *ngIf="spaceMarineForm.get('coordinates').get('x').invalid && spaceMarineForm.get('coordinates').get('x').touched">-->
+<!--				Invalid X coordinate.-->
+<!--			</div>-->
+
+<!--			<label for="y">Coordinate Y ( ≤ 118)</label>-->
+<!--			<input id="y" formControlName="coordinates.y" required />-->
+<!--			<div *ngIf="spaceMarineForm.get('coordinates').get('y').invalid && spaceMarineForm.get('coordinates').get('y').touched">-->
+<!--				Invalid Y coordinate.-->
+<!--			</div>-->
+<!--		</div>-->
+
+<!--		&lt;!&ndash; Поле health &ndash;&gt;-->
+<!--		<div>-->
+<!--			<label for="health">Health (> 0)</label>-->
+<!--			<input id="health" formControlName="health" type="number" required />-->
+<!--			<div *ngIf="spaceMarineForm.get('health').invalid && spaceMarineForm.get('health').touched">-->
+<!--				Invalid health value.-->
+<!--			</div>-->
+<!--		</div>-->
+
+<!--		&lt;!&ndash; Поле height &ndash;&gt;-->
+<!--		<div>-->
+<!--			<label for="height">Height</label>-->
+<!--			<input id="height" formControlName="height" type="number" />-->
+<!--		</div>-->
+
+<!--		&lt;!&ndash; Поле category &ndash;&gt;-->
+<!--		<div>-->
+<!--			<label for="category">Category</label>-->
+<!--			<select id="category" formControlName="category" required>-->
+<!--				<option *ngFor="let category of categories" [value]="category">{{ category }}</option>-->
+<!--			</select>-->
+<!--			<div *ngIf="spaceMarineForm.get('category').invalid && spaceMarineForm.get('category').touched">-->
+<!--				Category is required.-->
+<!--			</div>-->
+<!--		</div>-->
+
+<!--		&lt;!&ndash; Поле weaponType &ndash;&gt;-->
+<!--		<div>-->
+<!--			<label for="weaponType">Weapon</label>-->
+<!--			<select id="weaponType" formControlName="weaponType" required>-->
+<!--				<option *ngFor="let weapon of weapons" [value]="weapon">{{ weapon }}</option>-->
+<!--			</select>-->
+<!--			<div *ngIf="spaceMarineForm.get('weaponType').invalid && spaceMarineForm.get('weaponType').touched">-->
+<!--				Weapon type is required.-->
+<!--			</div>-->
+<!--		</div>-->
+
+<!--		&lt;!&ndash; Поле chapter &ndash;&gt;-->
+<!--		<div formGroupName="chapter">-->
+<!--			<label for="chapterName">Chapter Name</label>-->
+<!--			<input id="chapterName" formControlName="name" required />-->
+<!--			<div *ngIf="spaceMarineForm.get('chapter').get('name').invalid && spaceMarineForm.get('chapter').get('name').touched">-->
+<!--				Chapter name is required.-->
+<!--			</div>-->
+
+<!--			<label for="marinesCount">Marines Count (1-1000)</label>-->
+<!--			<input id="marinesCount" formControlName="marinesCount" type="number" required />-->
+<!--			<div *ngIf="spaceMarineForm.get('chapter').get('marinesCount').invalid && spaceMarineForm.get('chapter').get('marinesCount').touched">-->
+<!--				Invalid marines count.-->
+<!--			</div>-->
+
+<!--			<label for="world">World (Optional)</label>-->
+<!--			<input id="world" formControlName="world" />-->
+<!--		</div>-->
+
+<!--		&lt;!&ndash; Кнопка отправки &ndash;&gt;-->
+<!--		<button type="submit" [disabled]="spaceMarineForm.invalid">Submit</button>-->
+<!--	</form>-->
+<!--</div>-->
