@@ -1,17 +1,33 @@
 header {
+	position: fixed;
+	top: 0;
+	left: 0;
+	right: 0;
+	height: 60px; /* высота хедера */
+	background-color: #1e1e1e; /* Тёмный фон для темы в стиле Warhammer 40000 */
 	display: flex;
-	justify-content: space-between;
 	align-items: center;
-	padding: 10px 20px;
-	background-color: #f8f8f8;
-	border-bottom: 1px solid #ddd;
+	justify-content: space-between;
+	padding: 0 20px;
+	box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+	z-index: 1000; /* чтобы хедер всегда был на переднем плане */
+	border-bottom: 1px solid var(--border-color); /* нижняя граница */
+	color: var(--highlight-color); /* цвет текста */
 }
 
-h1 {
+.header h1 {
+	font-size: 24px;
+	font-family: 'Roboto Condensed', sans-serif;
 	margin: 0;
+	color: var(--highlight-color);
+	cursor: pointer;
 }
 
-nav {
-	display: flex;
-	gap: 10px;
+.header nav p {
+	color: var(--text-color); /* основной цвет текста */
+	margin-right: 20px;
+}
+
+.header nav button {
+	margin-left: 10px;
 }

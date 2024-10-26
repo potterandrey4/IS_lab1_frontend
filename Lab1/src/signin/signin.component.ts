@@ -1,45 +1,92 @@
-import { Component } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatInputModule } from '@angular/material/input';
-import { MatButtonModule } from '@angular/material/button';
+import {Component, OnInit} from '@angular/core';
+import {CommonModule} from '@angular/common';
+import {MatFormFieldModule} from '@angular/material/form-field';
+import {MatInputModule} from '@angular/material/input';
+import {MatButtonModule} from '@angular/material/button';
 import {Router, RouterLink} from '@angular/router';
-import { AuthService } from '../services/auth.service';
-import { FormsModule } from '@angular/forms';
-import * as CryptoJS from 'crypto-js'; // Импортируйте CryptoJS
+import {AuthService} from '../services/auth.service';
+import {
+	AbstractControl,
+	FormBuilder,
+	FormGroup,
+	FormsModule,
+	ReactiveFormsModule,
+	ValidationErrors,
+	Validators
+} from '@angular/forms';
+import * as CryptoJS from 'crypto-js';
+import {ToastrService} from 'ngx-toastr';
+import {catchError, timeout} from 'rxjs/operators';
+import {throwError} from 'rxjs';
+
+
+export function noWhitespaceValidator(control: AbstractControl): ValidationErrors | null {
+	const value = control.value || '';
+	return value.trim().length === 0 ? { noWhitespace: true } : null;
+}
+
 
 @Component({
 	selector: 'app-signin',
 	standalone: true,
 	templateUrl: './signin.component.html',
-	imports: [CommonModule, MatFormFieldModule, MatInputModule, MatButtonModule, RouterLink, FormsModule]
+	imports: [CommonModule, MatFormFieldModule, MatInputModule, MatButtonModule, RouterLink, FormsModule, ReactiveFormsModule]
 })
-export class SignInComponent {
-	username: string = '';
-	password: string = '';
+export class SignInComponent implements OnInit{
+	signInForm!: FormGroup;
 
-	constructor(private authService: AuthService, private router: Router) {
+	constructor(private authService: AuthService,
+				private router: Router,
+				private fb: FormBuilder,
+				private toastr: ToastrService
+	) {}
+
+	ngOnInit() {
+		this.signInForm = this.fb.group(
+			{
+				email: ['', [Validators.required, Validators.pattern("^[a-z0-9._%+-]+@[a-z0-9.-]+\\.[a-z]{2,4}$")]],
+				password: ['', [Validators.required, Validators.minLength(6), noWhitespaceValidator]],
+			}
+		);
 	}
 
 	onLogin() {
-		const hashedPassword = CryptoJS.MD5(this.password).toString(); // Хешируем пароль
-		const formData = {
-			name: this.username,
-			password: hashedPassword // Используем хешированный пароль
-		};
+		if (this.signInForm.invalid) {
+			this.toastr.error('Пожалуйста, заполните форму корректно.');
+			return;
+		}
 
-		this.authService.login(formData).subscribe(
+		const hashedPassword = CryptoJS.MD5(this.signInForm.get('password')?.value).toString();
+		const formData = {
+			email: this.signInForm.get('email')?.value,
+			password: hashedPassword
+		};
+		console.log(formData)
+
+		this.authService.login(formData).pipe(
+			timeout(3000),
+			catchError(error => {
+				if (error.name === 'TimeoutError') {
+					this.toastr.error('Сервер не отвечает. Превышено время ожидания.', 'Ошибка входа:');
+				} else if (error.status === 0) {
+					this.toastr.error('Сервер недоступен', 'Ошибка входа:');
+				} else if (error.status === 401) {
+					this.toastr.error('Пользователь не найден. Проверьте введенные данные.', 'Ошибка входа:');
+				} else {
+					this.toastr.error(error.message || 'Неизвестная ошибка', 'Ошибка входа:');
+				}
+				return throwError(() => error);
+			})
+		).subscribe(
 			(response: any) => {
 				if (response.token) {
-					console.log('Успешный вход:', response.token);
-					this.authService.setToken(response.token, this.username);
+					this.toastr.success('Успешный вход!', 'Успех');
+					this.authService.setToken(response.token, formData.email);
 					this.router.navigate(['/']);
-				} else {
-					console.error('Ошибка входа:', response.error);
 				}
 			},
 			error => {
-				console.error('Ошибка входа:', error);
+				console.error(error);
 			}
 		);
 	}

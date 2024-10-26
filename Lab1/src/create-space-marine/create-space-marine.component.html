@@ -1,87 +1,168 @@
-<p>create-space-marine works!</p>
+<mat-card class="space-marine-form">
+	<form [formGroup]="spaceMarineForm" (ngSubmit)="onSubmit()" class="form-container">
 
-<!--<div class="container">-->
-<!--	<form *ngIf="spaceMarineForm" [formGroup]="spaceMarineForm" (ngSubmit)="onSubmit()">-->
-<!--		&lt;!&ndash; Поле name &ndash;&gt;-->
-<!--		<div>-->
-<!--			<label for="name">Name</label>-->
-<!--			<input id="name" formControlName="name" required />-->
-<!--			<div *ngIf="spaceMarineForm.get('name').invalid && spaceMarineForm.get('name').touched">-->
-<!--				Name is required.-->
-<!--			</div>-->
-<!--		</div>-->
+		<!-- Name -->
+		<mat-form-field appearance="fill">
+			<mat-label>Name</mat-label>
+			<input matInput id="name" formControlName="name" />
+			<mat-error *ngIf="spaceMarineForm.get('name')?.hasError('required') && spaceMarineForm.get('name')?.touched">
+				Name is required.
+			</mat-error>
+			<mat-error *ngIf="spaceMarineForm.get('name')?.hasError('minlength') && spaceMarineForm.get('name')?.touched">
+				Name cannot be empty.
+			</mat-error>
+			<mat-error *ngIf="spaceMarineForm.get('name')?.hasError('noWhitespace') && spaceMarineForm.get('name')?.touched">
+				Name cannot consist only of spaces.
+			</mat-error>
+		</mat-form-field>
 
-<!--		&lt;!&ndash; Поле coordinates &ndash;&gt;-->
-<!--		<div>-->
-<!--			<label for="x">Coordinate X ( > -585)</label>-->
-<!--			<input id="x" formControlName="coordinates.x" required />-->
-<!--			<div *ngIf="spaceMarineForm.get('coordinates').get('x').invalid && spaceMarineForm.get('coordinates').get('x').touched">-->
-<!--				Invalid X coordinate.-->
-<!--			</div>-->
+		<!-- Coordinates Group -->
+		<div formGroupName="coordinates" class="coordinates-group">
 
-<!--			<label for="y">Coordinate Y ( ≤ 118)</label>-->
-<!--			<input id="y" formControlName="coordinates.y" required />-->
-<!--			<div *ngIf="spaceMarineForm.get('coordinates').get('y').invalid && spaceMarineForm.get('coordinates').get('y').touched">-->
-<!--				Invalid Y coordinate.-->
-<!--			</div>-->
-<!--		</div>-->
+			<!-- X Coordinate -->
+			<mat-form-field appearance="fill">
+				<mat-label>X Coordinate</mat-label>
+				<input matInput id="x" formControlName="x" />
+				<mat-error *ngIf="spaceMarineForm.get('coordinates.x')?.hasError('required') && spaceMarineForm.get('coordinates.x')?.touched">
+					X coordinate is required.
+				</mat-error>
+				<mat-error *ngIf="spaceMarineForm.get('coordinates.x')?.hasError('notANumber') && spaceMarineForm.get('coordinates.x')?.touched">
+					X coordinate must be a number.
+				</mat-error>
+				<mat-error *ngIf="spaceMarineForm.get('coordinates.x')?.hasError('min') && spaceMarineForm.get('coordinates.x')?.touched">
+					X must be greater than -585.
+				</mat-error>
+				<mat-error *ngIf="spaceMarineForm.get('coordinates.x')?.hasError('noWhitespace') && spaceMarineForm.get('coordinates.x')?.touched">
+					X cannot consist only of spaces.
+				</mat-error>
+			</mat-form-field>
 
-<!--		&lt;!&ndash; Поле health &ndash;&gt;-->
-<!--		<div>-->
-<!--			<label for="health">Health (> 0)</label>-->
-<!--			<input id="health" formControlName="health" type="number" required />-->
-<!--			<div *ngIf="spaceMarineForm.get('health').invalid && spaceMarineForm.get('health').touched">-->
-<!--				Invalid health value.-->
-<!--			</div>-->
-<!--		</div>-->
+			<!-- Y Coordinate -->
+			<mat-form-field appearance="fill">
+				<mat-label>Y Coordinate</mat-label>
+				<input matInput id="y" formControlName="y" />
+				<mat-error *ngIf="spaceMarineForm.get('coordinates.y')?.hasError('required') && spaceMarineForm.get('coordinates.y')?.touched">
+					Y coordinate is required.
+				</mat-error>
+				<mat-error *ngIf="spaceMarineForm.get('coordinates.y')?.hasError('notANumber') && spaceMarineForm.get('coordinates.y')?.touched">
+					Y coordinate must be a number.
+				</mat-error>
+				<mat-error *ngIf="spaceMarineForm.get('coordinates.y')?.hasError('max') && spaceMarineForm.get('coordinates.y')?.touched">
+					Y must be less than or equal to 118.
+				</mat-error>
+				<mat-error *ngIf="spaceMarineForm.get('coordinates.y')?.hasError('noWhitespace') && spaceMarineForm.get('coordinates.y')?.touched">
+					Y cannot consist only of spaces.
+				</mat-error>
+			</mat-form-field>
+		</div>
 
-<!--		&lt;!&ndash; Поле height &ndash;&gt;-->
-<!--		<div>-->
-<!--			<label for="height">Height</label>-->
-<!--			<input id="height" formControlName="height" type="number" />-->
-<!--		</div>-->
+		<!-- Health -->
+		<mat-form-field appearance="fill">
+			<mat-label>Health</mat-label>
+			<input matInput id="health" formControlName="health" />
+			<mat-error *ngIf="spaceMarineForm.get('health')?.hasError('required') && spaceMarineForm.get('health')?.touched">
+				Health is required.
+			</mat-error>
+			<mat-error *ngIf="spaceMarineForm.get('health')?.hasError('notANumber') && spaceMarineForm.get('health')?.touched">
+				Health must be a number.
+			</mat-error>
+			<mat-error *ngIf="spaceMarineForm.get('health')?.hasError('min') && spaceMarineForm.get('health')?.touched">
+				Health must be greater than 0.
+			</mat-error>
+			<mat-error *ngIf="spaceMarineForm.get('health')?.hasError('noWhitespace') && spaceMarineForm.get('health')?.touched">
+				Health cannot consist only of spaces.
+			</mat-error>
+		</mat-form-field>
 
-<!--		&lt;!&ndash; Поле category &ndash;&gt;-->
-<!--		<div>-->
-<!--			<label for="category">Category</label>-->
-<!--			<select id="category" formControlName="category" required>-->
-<!--				<option *ngFor="let category of categories" [value]="category">{{ category }}</option>-->
-<!--			</select>-->
-<!--			<div *ngIf="spaceMarineForm.get('category').invalid && spaceMarineForm.get('category').touched">-->
-<!--				Category is required.-->
-<!--			</div>-->
-<!--		</div>-->
+		<!-- Height -->
+		<mat-form-field appearance="fill">
+			<mat-label>Height</mat-label>
+			<input matInput id="height" formControlName="height" />
+			<mat-error *ngIf="spaceMarineForm.get('height')?.hasError('required') && spaceMarineForm.get('height')?.touched">
+				Health is required.
+			</mat-error>
+			<mat-error *ngIf="spaceMarineForm.get('height')?.hasError('notANumber') && spaceMarineForm.get('height')?.touched">
+				Health must be a number.
+			</mat-error>
+			<mat-error *ngIf="spaceMarineForm.get('height')?.hasError('min') && spaceMarineForm.get('height')?.touched">
+				Health must be greater than 0.
+			</mat-error>
+			<mat-error *ngIf="spaceMarineForm.get('height')?.hasError('noWhitespace') && spaceMarineForm.get('height')?.touched">
+				Health cannot consist only of spaces.
+			</mat-error>
+		</mat-form-field>
 
-<!--		&lt;!&ndash; Поле weaponType &ndash;&gt;-->
-<!--		<div>-->
-<!--			<label for="weaponType">Weapon</label>-->
-<!--			<select id="weaponType" formControlName="weaponType" required>-->
-<!--				<option *ngFor="let weapon of weapons" [value]="weapon">{{ weapon }}</option>-->
-<!--			</select>-->
-<!--			<div *ngIf="spaceMarineForm.get('weaponType').invalid && spaceMarineForm.get('weaponType').touched">-->
-<!--				Weapon type is required.-->
-<!--			</div>-->
-<!--		</div>-->
+		<!-- Category -->
+		<mat-form-field appearance="fill">
+			<mat-label>Category</mat-label>
+			<mat-select id="category" formControlName="category">
+				<mat-option value="">Select a category</mat-option>
+				<mat-option *ngFor="let category of categories" [value]="category">{{ category }}</mat-option>
+			</mat-select>
+			<mat-error *ngIf="spaceMarineForm.get('category')?.hasError('required') && spaceMarineForm.get('category')?.touched">
+				Category is required.
+			</mat-error>
+		</mat-form-field>
 
-<!--		&lt;!&ndash; Поле chapter &ndash;&gt;-->
-<!--		<div formGroupName="chapter">-->
-<!--			<label for="chapterName">Chapter Name</label>-->
-<!--			<input id="chapterName" formControlName="name" required />-->
-<!--			<div *ngIf="spaceMarineForm.get('chapter').get('name').invalid && spaceMarineForm.get('chapter').get('name').touched">-->
-<!--				Chapter name is required.-->
-<!--			</div>-->
+		<!-- Weapon Type -->
+		<mat-form-field appearance="fill">
+			<mat-label>Weapon Type</mat-label>
+			<mat-select id="weaponType" formControlName="weaponType">
+				<mat-option value="">Select a category</mat-option>
+				<mat-option *ngFor="let weapon of weapons" [value]="weapon">{{ weapon }}</mat-option>
+			</mat-select>
+			<mat-error *ngIf="spaceMarineForm.get('weaponType')?.hasError('required') && spaceMarineForm.get('weaponType')?.touched">
+				Weapon Type is required.
+			</mat-error>
+		</mat-form-field>
 
-<!--			<label for="marinesCount">Marines Count (1-1000)</label>-->
-<!--			<input id="marinesCount" formControlName="marinesCount" type="number" required />-->
-<!--			<div *ngIf="spaceMarineForm.get('chapter').get('marinesCount').invalid && spaceMarineForm.get('chapter').get('marinesCount').touched">-->
-<!--				Invalid marines count.-->
-<!--			</div>-->
+		<!-- Chapter Group -->
+		<div formGroupName="chapter" class="chapter-group">
 
-<!--			<label for="world">World (Optional)</label>-->
-<!--			<input id="world" formControlName="world" />-->
-<!--		</div>-->
+			<!-- Chapter Name -->
+			<mat-form-field appearance="fill">
+				<mat-label>Chapter Name</mat-label>
+				<input matInput id="chapterName" formControlName="name" />
+				<mat-error *ngIf="spaceMarineForm.get('chapter.name')?.hasError('required') && spaceMarineForm.get('chapter.name')?.touched">
+					Chapter name is required.
+				</mat-error>
+				<mat-error *ngIf="spaceMarineForm.get('chapter.name')?.hasError('minlength') && spaceMarineForm.get('chapter.name')?.touched">
+					Chapter name cannot be empty.
+				</mat-error>
+				<mat-error *ngIf="spaceMarineForm.get('chapter.name')?.hasError('noWhitespace') && spaceMarineForm.get('chapter.name')?.touched">
+					Health cannot consist only of spaces.
+				</mat-error>
+			</mat-form-field>
 
-<!--		&lt;!&ndash; Кнопка отправки &ndash;&gt;-->
-<!--		<button type="submit" [disabled]="spaceMarineForm.invalid">Submit</button>-->
-<!--	</form>-->
-<!--</div>-->
+			<!-- Marines Count -->
+			<mat-form-field appearance="fill">
+				<mat-label>Marines Count</mat-label>
+				<input matInput id="marinesCount" formControlName="marinesCount" />
+				<mat-error *ngIf="spaceMarineForm.get('chapter.marinesCount')?.hasError('required') && spaceMarineForm.get('chapter.marinesCount')?.touched">
+					Marines count is required.
+				</mat-error>
+				<mat-error *ngIf="spaceMarineForm.get('chapter.marinesCount')?.hasError('notANumber') && spaceMarineForm.get('chapter.marinesCount')?.touched">
+					Marines count must be a number.
+				</mat-error>
+				<mat-error *ngIf="spaceMarineForm.get('chapter.marinesCount')?.hasError('min') && spaceMarineForm.get('chapter.marinesCount')?.touched">
+					Marines count must be greater than 0.
+				</mat-error>
+				<mat-error *ngIf="spaceMarineForm.get('chapter.marinesCount')?.hasError('max') && spaceMarineForm.get('chapter.marinesCount')?.touched">
+					Marines count must be less than or equal to 1000.
+				</mat-error>
+				<mat-error *ngIf="spaceMarineForm.get('chapter.marinesCount')?.hasError('noWhitespace') && spaceMarineForm.get('chapter.marinesCount')?.touched">
+					Health cannot consist only of spaces.
+				</mat-error>
+			</mat-form-field>
+
+			<!-- World -->
+			<mat-form-field appearance="fill">
+				<mat-label>World</mat-label>
+				<input matInput id="world" formControlName="world" />
+			</mat-form-field>
+		</div>
+
+		<!-- Submit Button -->
+		<button mat-raised-button color="primary" type="submit" [disabled]="spaceMarineForm.invalid">Submit</button>
+	</form>
+</mat-card>

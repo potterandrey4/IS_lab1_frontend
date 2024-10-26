@@ -10,9 +10,9 @@ import { ControlPanelComponent } from '../control-panel/control-panel.component'
 import { AuthGuard } from './auth.guard';  // Импорт AuthGuard
 
 export const routes: Routes = [
-	{ path: '', component: HomeComponent }, // Доступно всем
-	{ path: 'login', component: SignInComponent }, // Доступно всем
-	{ path: 'signup', component: SignUpComponent }, // Доступно всем
+	{ path: '', component: HomeComponent },
+	{ path: 'login', component: SignInComponent },
+	{ path: 'signup', component: SignUpComponent },
 
 	// Защищённые маршруты
 	{ path: 'control-panel', component: ControlPanelComponent, canActivate: [AuthGuard] },

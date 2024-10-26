@@ -1,13 +1,14 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable, BehaviorSubject, of } from 'rxjs';
-import { catchError, map } from 'rxjs/operators';
+import {catchError, map, timeout} from 'rxjs/operators';
+import {ToastrService} from 'ngx-toastr';
 
 @Injectable({
 	providedIn: 'root',
 })
 export class AuthService {
-	private apiUrl = 'http://localhost:8080/api';
+	private apiUrl = 'http://localhost:8080/auth';
 
 	private loggedInSubject = new BehaviorSubject<boolean>(this.hasToken());
 	public isLoggedIn$ = this.loggedInSubject.asObservable();
@@ -15,7 +16,7 @@ export class AuthService {
 	private usernameSubject = new BehaviorSubject<string | null>(null);
 	public username$ = this.usernameSubject.asObservable();
 
-	constructor(private http: HttpClient) {}
+	constructor(private http: HttpClient, private toastr: ToastrService) {}
 
 	login(formData: any): Observable<any> {
 		return this.http.post(`${this.apiUrl}/signin`, formData);
@@ -62,15 +63,18 @@ export class AuthService {
 		const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
 
 		return this.http.post(`${this.apiUrl}/verify-token`, {}, { headers }).pipe(
+			timeout(5000),
 			map((response: any) => {
-				// Успешная верификация токена
 				this.loggedInSubject.next(true);
 				return true;
 			}),
 			catchError((error) => {
-				// Ошибка при верификации, токен недействителен
-				console.error('Ошибка верификации токена:', error);
-				this.loggedInSubject.next(false);
+				if (error.name === 'TimeoutError') {
+					this.toastr.error('Сервер не отвечает. Превышено время ожидания.', 'Ошибка верификации токена:');
+				} else {
+					this.toastr.error('Ошибка верификации токена');
+					this.loggedInSubject.next(false);
+				}
 				return of(false);
 			})
 		);

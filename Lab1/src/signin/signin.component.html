@@ -1,16 +1,25 @@
 <div class="container">
 	<h2>Вход в систему</h2>
-	<form (ngSubmit)="onLogin()">
+	<form [formGroup]="signInForm" (ngSubmit)="onLogin()">
 		<mat-form-field appearance="outline">
-			<mat-label>Имя пользователя</mat-label>
-			<input matInput type="text" name="username" [(ngModel)]="username" required>
+			<mat-label>Почта</mat-label>
+			<input matInput formControlName="email" required>
+			<mat-error *ngIf="signInForm.get('email')?.hasError('required')">
+				Email обязателен
+			</mat-error>
+			<mat-error *ngIf="signInForm.get('email')?.hasError('pattern')">
+				Введите корректный адрес электронной почты
+			</mat-error>
 		</mat-form-field>
 
 		<mat-form-field appearance="outline">
 			<mat-label>Пароль</mat-label>
-			<input matInput type="password" name="password" [(ngModel)]="password" required>
+			<input matInput type="password" formControlName="password" required>
+			<mat-error *ngIf="signInForm.get('password')?.hasError('required')">
+				Пароль обязателен
+			</mat-error>
 		</mat-form-field>
 
-		<button mat-raised-button type="submit">Войти</button>
+		<button type="submit">Войти</button>
 	</form>
 </div>

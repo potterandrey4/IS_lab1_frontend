@@ -1,11 +1,13 @@
 import { Component } from '@angular/core';
 import {AuthService} from '../services/auth.service';
 import {Router} from '@angular/router';
+import {NotificationService} from '../app/notification.service';
+import {MatButtonModule} from '@angular/material/button';
 
 @Component({
   selector: 'app-control-panel',
   standalone: true,
-  imports: [],
+  imports: [MatButtonModule],
   templateUrl: './control-panel.component.html',
   styleUrl: './control-panel.component.css'
 })

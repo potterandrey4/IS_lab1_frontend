@@ -1,56 +1,199 @@
-/*!* Общие стили для всего приложения *!*/
-/*body {*/
-/*  background-color: rgba(47, 76, 108, 0.66); !* Чёрный фон *!*/
-/*  color: #ffffff; !* Белый текст *!*/
-/*  font-family: Arial, sans-serif;*/
-/*}*/
+:root {
+	--primary-color: #1f1f1f; /* Темный серый, почти черный, для фона */
+	--secondary-color: #282828; /* Для контейнеров */
+	--accent-color: #d4af37; /* Цвет золотой брони и эмблемы Империума */
+	--warning-color: #ff0000; /* Красный для критических состояний */
+	--text-color: #e0e0e0; /* Светло-серый текст */
+	--text-muted-color: #888888; /* Более темный для второстепенных элементов */
+	--border-color: #444444; /* Цвет границ */
+	--button-bg-color: #333333; /* Цвет для кнопок */
+	--button-hover-color: #555555; /* Hover эффект для кнопок */
+	--input-bg-color: #1f1f1f; /* Цвет фона для инпутов */
+	--input-text-color: #ffffff; /* Цвет текста для инпутов */
+	--input-border-color: #444444; /* Границы инпутов */
+	--highlight-color: #d4af37; /* Подсветка активных элементов */
+}
 
-/*h1, h2 {*/
-/*  color: black; !* Красный цвет заголовков *!*/
-/*  text-align: center;*/
-/*}*/
+.space-marine-form {
+	max-width: 600px;
+	margin: 2rem auto;
+	padding: 1rem;
+}
 
-/*!* Стили для контейнера форм *!*/
-/*.container {*/
-/*  max-width: 400px;*/
-/*  margin: 50px auto;*/
-/*  padding: 20px;*/
-/*  border: 2px solid #410a0a; !* Красная рамка *!*/
-/*  border-radius: 8px;*/
-/*  background-color: #1a1a1a; !* Темно-серый фон для форм *!*/
-/*}*/
+.form-container {
+	display: flex;
+	flex-direction: column;
+	gap: 1rem;
+}
 
-/*!* Стили для кнопок *!*/
-/*button {*/
-/*  background-color: #410a0a; !* Красный фон кнопок *!*/
-/*  color: #ffffff; !* Белый текст на кнопках *!*/
-/*  border: none;*/
-/*  border-radius: 5px;*/
-/*  padding: 10px 20px;*/
-/*  cursor: pointer;*/
-/*}*/
+.coordinates-group, .chapter-group {
+	display: flex;
+	justify-content: space-between;
+	gap: 1rem;
+}
 
-/*button:hover {*/
-/*  background-color: #cc0000; !* Темнее при наведении *!*/
-/*}*/
+h1 {
+	color: #f0f0f0;
+	font-size: 24px;
+	margin: 0;
+	font-family: 'GothicRus', serif !important;
+}
 
-/*!* Стили для полей ввода *!*/
-/*mat-form-field {*/
-/*  width: 100%;*/
-/*  margin-bottom: 20px; !* Отступ между полями *!*/
-/*}*/
+nav {
+	display: flex;
+	gap: 10px;
+}
 
-/*!* Стили для ошибок валидации (если нужно) *!*/
-/*.mat-form-field-underline {*/
-/*  background-color: #410a0a; !* Красная линия под полем *!*/
-/*}*/
+nav button {
+	background-color: #343a40;
+	color: #f0f0f0;
+	border: none;
+	padding: 10px;
+	cursor: pointer;
+	transition: background-color 0.3s ease;
+}
 
-/*!* Стили для ссылок *!*/
-/*a {*/
-/*  color: #410a0a; !* Красные ссылки *!*/
-/*  text-decoration: none; !* Убираем подчеркивание *!*/
-/*}*/
+nav button:hover {
+	background-color: #495057;
+}
 
-/*a:hover {*/
-/*  text-decoration: underline; !* Подчеркивание при наведении *!*/
-/*}*/
+/* Основной контент */
+body {
+	margin: 0;
+	background-color: var(--primary-color);
+	color: var(--text-color);
+}
+
+main {
+	padding-top: 80px; /* Отступ сверху, чтобы контент не залезал под хедер */
+	padding-left: 20px;
+	padding-right: 20px;
+}
+
+/* Стиль карточек (материал карточки) */
+mat-card {
+	background-color: var(--secondary-color);
+	border: 1px solid var(--border-color);
+	box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
+	color: var(--text-color);
+}
+
+/* Стиль заголовков */
+h1, h2, h3, h4, h5 {
+	color: var(--highlight-color);
+	font-family: 'Roboto Condensed', sans-serif;
+	letter-spacing: 0.1em;
+	text-transform: uppercase;
+}
+
+/* Кнопки */
+button {
+	background-color: var(--button-bg-color);
+	color: var(--text-color);
+	border: 1px solid var(--border-color);
+	text-transform: uppercase;
+	padding: 10px 20px;
+	font-weight: bold;
+	transition: background-color 0.3s ease;
+}
+
+button:hover {
+	background-color: var(--button-hover-color);
+}
+
+/* Поля ввода */
+mat-form-field {
+	background-color: var(--input-bg-color);
+	color: var(--input-text-color);
+	border-radius: 4px;
+}
+
+input {
+	background-color: var(--input-bg-color);
+	color: var(--input-text-color);
+	border: 1px solid var(--input-border-color);
+	padding: 10px;
+}
+
+input::placeholder {
+	color: var(--text-muted-color);
+}
+
+input:focus {
+	border-color: var(--highlight-color);
+	outline: none;
+}
+
+/* Выбор категории (селекты) */
+mat-select {
+	background-color: var(--input-bg-color);
+	color: var(--input-text-color);
+}
+
+mat-option {
+	background-color: var(--primary-color);
+	color: var(--text-color);
+}
+
+mat-option:hover {
+	background-color: var(--button-hover-color);
+}
+
+/* Ошибки (например, для валидации форм) */
+mat-error {
+	color: var(--warning-color);
+}
+
+/* Стиль разделов */
+.coordinates-group,
+.chapter-group {
+	display: flex;
+	flex-direction: column;
+	gap: 15px;
+	padding: 10px;
+	background-color: var(--primary-color);
+	border: 1px solid var(--border-color);
+	border-radius: 8px;
+}
+
+/* Отступы между элементами формы */
+.form-container {
+	display: flex;
+	flex-direction: column;
+	gap: 20px;
+}
+
+.mat-form-field {
+	width: 100%;
+}
+
+/* Подсветка активных элементов */
+.mat-form-field.mat-focused .mat-form-field-ripple {
+	background-color: var(--highlight-color);
+}
+
+button {
+	background-color: #444240;
+	color: #ffffff;
+	border: none;
+	border-radius: 20px;
+	padding: 10px 20px;
+	cursor: pointer;
+	text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.4); /* Тень для объёмности текста */
+	box-shadow: 0 4px #999; /* Тень под кнопкой для эффекта подъема */
+	transition: all 0.3s ease; /* Плавный переход при нажатии */
+}
+button:active {
+	box-shadow: 0 2px #666; /* Уменьшение тени при нажатии */
+	transform: translateY(2px); /* Сдвиг кнопки вниз при нажатии */
+}
+
+
+@font-face {
+	font-family: 'GothicRus';
+	src: url('./assets/GothicRusMedium.woff2') format('woff2'),
+	url('./assets/GothicRusMedium.woff') format('woff');
+	font-weight: 500;
+	font-style: normal;
+	font-display: swap;
+}
