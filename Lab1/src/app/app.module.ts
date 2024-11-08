@@ -21,6 +21,8 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatOptionModule } from '@angular/material/core';
 import { MatButtonModule } from '@angular/material/button';
 import {HeaderComponent} from '../header/header.component';
+import {EditSpaceMarineComponent} from '../edit-space-marine/edit-space-marine.component';
+import {DeleteSpaceMarineComponent} from '../delete-space-marine/delete-space-marine.component';
 
 
 @NgModule({
@@ -47,6 +49,8 @@ import {HeaderComponent} from '../header/header.component';
 		HomeComponent,
 		ControlPanelComponent,
 		CreateSpaceMarineComponent,
+		EditSpaceMarineComponent,
+		DeleteSpaceMarineComponent,
 		HeaderComponent
 	],
 	providers: [

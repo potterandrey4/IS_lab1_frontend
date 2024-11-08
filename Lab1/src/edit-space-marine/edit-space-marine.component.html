@@ -1,1 +1,64 @@
-<p>edit-space-marine works!</p>
+<mat-card>
+	<h2>Редактировать Space Marine</h2>
+	<form [formGroup]="spaceMarineForm" (ngSubmit)="onSubmit()">
+		<mat-form-field>
+			<mat-label>Имя</mat-label>
+			<input matInput formControlName="name" />
+		</mat-form-field>
+
+		<mat-form-field>
+			<mat-label>Координата X</mat-label>
+			<input matInput formControlName="coordinates.x" />
+		</mat-form-field>
+
+		<mat-form-field>
+			<mat-label>Координата Y</mat-label>
+			<input matInput formControlName="coordinates.y" />
+		</mat-form-field>
+
+		<mat-form-field>
+			<mat-label>Здоровье</mat-label>
+			<input matInput formControlName="health" />
+		</mat-form-field>
+
+		<mat-form-field>
+			<mat-label>Рост</mat-label>
+			<input matInput formControlName="height" />
+		</mat-form-field>
+
+		<mat-form-field>
+			<mat-label>Категория</mat-label>
+			<mat-select formControlName="category">
+				<mat-option *ngFor="let category of categories" [value]="category">
+					{{ category }}
+				</mat-option>
+			</mat-select>
+		</mat-form-field>
+
+		<mat-form-field>
+			<mat-label>Оружие</mat-label>
+			<mat-select formControlName="weaponType">
+				<mat-option *ngFor="let weapon of weapons" [value]="weapon">
+					{{ weapon }}
+				</mat-option>
+			</mat-select>
+		</mat-form-field>
+
+		<mat-form-field>
+			<mat-label>Название Группы</mat-label>
+			<input matInput formControlName="chapter.name" />
+		</mat-form-field>
+
+		<mat-form-field>
+			<mat-label>Кол-во бойцов</mat-label>
+			<input matInput formControlName="chapter.marinesCount" />
+		</mat-form-field>
+
+		<mat-form-field>
+			<mat-label>Мир</mat-label>
+			<input matInput formControlName="chapter.world" />
+		</mat-form-field>
+
+		<button mat-raised-button color="primary" type="submit">Сохранить</button>
+	</form>
+</mat-card>
