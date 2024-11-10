@@ -3,17 +3,16 @@
 		<h2>Вы авторизованы!</h2>
 		<button (click)="control_panel()">Панель управления</button>
 
-		<!-- Переключатель "Объекты всех пользователей"/"Мои объекты" -->
-		<div class="toggle-container">
-			<label>
-				<input type="radio" [(ngModel)]="showAll" (change)="toggleView()" [value]="true" />
-				Объекты всех пользователей
-			</label>
-			<label>
-				<input type="radio" [(ngModel)]="showAll" (change)="toggleView()" [value]="false" />
-				Мои объекты
-			</label>
-		</div>
+		<!-- Кнопки выбора отображаемых объектов -->
+		<mat-button-toggle-group
+			name="chooseOwner"
+			aria-label="Choose Owner"
+			[(ngModel)]="selectedView"
+			(change)="toggleView()"
+			class="owner-toggle-group">
+			<mat-button-toggle value="all">Все объекты</mat-button-toggle>
+			<mat-button-toggle value="mine">Мои объекты</mat-button-toggle>
+		</mat-button-toggle-group>
 
 		<table *ngIf="spaceMarines && spaceMarines.length > 0" class="space-marine-table">
 			<thead>
@@ -45,7 +44,6 @@
 				<td>{{ marine.health }}</td>
 				<td>{{ marine.category }}</td>
 				<td>{{ marine.weaponType }}</td>
-
 			</tr>
 			</tbody>
 		</table>

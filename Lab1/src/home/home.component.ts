@@ -4,18 +4,20 @@ import { CommonModule } from '@angular/common';
 import { Router, RouterLink } from '@angular/router';
 import { SpaceMarineService } from '../services/space-marine.service';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { MatButtonToggleModule } from '@angular/material/button-toggle';
 
 @Component({
 	standalone: true,
 	selector: 'app-home',
 	templateUrl: './home.component.html',
-	imports: [CommonModule, RouterLink, ReactiveFormsModule, FormsModule]
+	styleUrls: ['./home.component.css'],
+	imports: [CommonModule, RouterLink, ReactiveFormsModule, FormsModule, MatButtonToggleModule]
 })
 export class HomeComponent {
 	isLoggedIn = false;
-	showAll = true;
 	spaceMarines: any[] = [];
 	isLoading = false;
+	selectedView: 'all' | 'mine' = 'all';  // Значение по умолчанию
 
 	constructor(private authService: AuthService, private router: Router, private spaceMarineService: SpaceMarineService) {}
 
@@ -31,7 +33,6 @@ export class HomeComponent {
 	}
 
 	toggleView() {
-		this.showAll = !this.showAll;
 		this.loadSpaceMarines();
 	}
 
@@ -39,7 +40,7 @@ export class HomeComponent {
 		if (this.isLoading) return;
 		this.isLoading = true;
 
-		if (this.showAll) {
+		if (this.selectedView === 'all') {
 			this.spaceMarineService.getAllSpaceMarines().subscribe(
 				data => {
 					this.spaceMarines = data;
