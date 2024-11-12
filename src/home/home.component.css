@@ -1,0 +1,65 @@
+.home-container {
+	margin-top: 80px; /* отступ для фиксированного header */
+	padding: 20px;
+}
+
+.toggle-group {
+	display: flex;
+	justify-content: center;
+	margin: 20px auto;
+	padding: 1%;
+	width: 30%;
+}
+
+.toggle-button {
+	margin: 0 10px;
+	font-weight: bold;
+	font-size: 1em;
+	color: #fff;
+	border-radius: 25px;
+	transition: background-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.space-marine-table {
+	width: 90%;
+	border-collapse: collapse;
+	margin: 20px auto;
+	color: var(--text-color);
+	background-color: var(--secondary-color);
+}
+
+.space-marine-table th, .space-marine-table td {
+	text-align: center;
+	vertical-align: middle;
+	border: 1px solid var(--border-color);
+	padding: 8px;
+}
+
+.space-marine-table th {
+	background-color: #333;
+	font-weight: bold;
+	color: var(--accent-color);
+	cursor: pointer;
+	position: relative;
+}
+
+.space-marine-table th span {
+	font-size: 14px;
+	margin-left: 5px;
+}
+
+.space-marine-table th.asc::after {
+	content: ' ↑';
+}
+
+.space-marine-table th.desc::after {
+	content: ' ↓';
+}
+
+.space-marine-table tr:hover {
+	background-color: #3a3a3a;
+}
+
+.button_in_line {
+	scale: 65%;
+}

@@ -1,0 +1,105 @@
+<div class="home-container">
+	<div *ngIf="isLoggedIn; else loggedOut">
+		<button (click)="control_panel()">Панель управления</button>
+
+		<mat-button-toggle-group
+			name="chooseOwner"
+			aria-label="Choose Owner"
+			[(ngModel)]="selectedView"
+			(change)="toggleView()"
+			class="toggle-group">
+			<mat-button-toggle value="all" class="toggle-button">Все объекты</mat-button-toggle>
+			<mat-button-toggle value="mine" class="toggle-button">Мои объекты</mat-button-toggle>
+		</mat-button-toggle-group>
+
+		<table class="space-marine-table">
+			<thead>
+			<tr>
+				<th (click)="sortTable('id')"
+					[ngClass]="{'asc': sortColumn === 'id' && sortDirection === 'asc', 'desc': sortColumn === 'id' && sortDirection === 'desc'}">
+					ID
+				</th>
+				<th (click)="sortTable('user_email')"
+					[ngClass]="{'asc': sortColumn === 'user_email' && sortDirection === 'asc', 'desc': sortColumn === 'user_email' && sortDirection === 'desc'}">
+					Владелец
+				</th>
+				<th (click)="sortTable('coordinates_x')"
+					[ngClass]="{'asc': sortColumn === 'coordinates_x' && sortDirection === 'asc', 'desc': sortColumn === 'coordinates_x' && sortDirection === 'desc'}">
+					Координаты
+				</th>
+				<th (click)="sortTable('creationDate')"
+					[ngClass]="{'asc': sortColumn === 'creationDate' && sortDirection === 'asc', 'desc': sortColumn === 'creationDate' && sortDirection === 'desc'}">
+					Дата создания
+				</th>
+				<th (click)="sortTable('name')"
+					[ngClass]="{'asc': sortColumn === 'name' && sortDirection === 'asc', 'desc': sortColumn === 'name' && sortDirection === 'desc'}">
+					Имя корабля
+				</th>
+				<th (click)="sortTable('chapter_name')"
+					[ngClass]="{'asc': sortColumn === 'chapter_name' && sortDirection === 'asc', 'desc': sortColumn === 'chapter_name' && sortDirection === 'desc'}">
+					Название экипажа
+				</th>
+				<th (click)="sortTable('chapter_marinesCount')"
+					[ngClass]="{'asc': sortColumn === 'chapter_marinesCount' && sortDirection === 'asc', 'desc': sortColumn === 'chapter_marinesCount' && sortDirection === 'desc'}">
+					Численность экипажа
+				</th>
+				<th (click)="sortTable('chapter_world')"
+					[ngClass]="{'asc': sortColumn === 'chapter_world' && sortDirection === 'asc', 'desc': sortColumn === 'chapter_world' && sortDirection === 'desc'}">
+					Мир экипажа
+				</th>
+				<th (click)="sortTable('height')"
+					[ngClass]="{'asc': sortColumn === 'height' && sortDirection === 'asc', 'desc': sortColumn === 'height' && sortDirection === 'desc'}">
+					Высота
+				</th>
+				<th (click)="sortTable('health')"
+					[ngClass]="{'asc': sortColumn === 'health' && sortDirection === 'asc', 'desc': sortColumn === 'health' && sortDirection === 'desc'}">
+					Здоровье
+				</th>
+				<th (click)="sortTable('category')"
+					[ngClass]="{'asc': sortColumn === 'category' && sortDirection === 'asc', 'desc': sortColumn === 'category' && sortDirection === 'desc'}">
+					Категория
+				</th>
+				<th (click)="sortTable('weaponType')"
+					[ngClass]="{'asc': sortColumn === 'weaponType' && sortDirection === 'asc', 'desc': sortColumn === 'weaponType' && sortDirection === 'desc'}">
+					Тип оружия
+				</th>
+				<th>Изменить</th>
+				<th>Удалить</th>
+			</tr>
+			</thead>
+			<tbody *ngIf="spaceMarines && spaceMarines.length > 0">
+			<tr *ngFor="let marine of spaceMarines">
+				<td>{{ marine.id }}</td>
+				<td>{{ marine.user_email }}</td>
+				<td>{{ marine.coordinates_x }}; {{ marine.coordinates_y }}</td>
+				<td>{{ formatDate(marine.creationDate) }}</td>
+				<td>{{ marine.name }}</td>
+				<td>{{ marine.chapter_name }}</td>
+				<td>{{ marine.chapter_marinesCount }}</td>
+				<td>{{ marine.chapter_world }}</td>
+				<td>{{ marine.height }}</td>
+				<td>{{ marine.health }}</td>
+				<td>{{ marine.category }}</td>
+				<td>{{ marine.weaponType }}</td>
+				<td *ngIf="marine.user_email === currentUserEmail">
+					<button mat-icon-button (click)="editMarine(marine)" class="button_in_line">
+						<mat-icon>edit</mat-icon>
+					</button>
+				</td>
+				<td *ngIf="marine.user_email === currentUserEmail">
+					<button mat-icon-button (click)="deleteMarine(marine)" class="button_in_line">
+						<mat-icon>delete</mat-icon>
+					</button>
+				</td>
+			</tr>
+			</tbody>
+		</table>
+
+	</div>
+
+	<ng-template #loggedOut>
+		<h2>Вы не авторизованы!</h2>
+		<p>Пожалуйста, войдите в систему для доступа к большему количеству возможностей или зарегистрируйтесь, если у
+			вас еще нет учетной записи.</p>
+	</ng-template>
+</div>

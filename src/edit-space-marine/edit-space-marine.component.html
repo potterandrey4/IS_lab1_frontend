@@ -1,0 +1,66 @@
+<mat-card class="space-marine-form">
+	<form [formGroup]="spaceMarineForm" (ngSubmit)="onSubmit()" class="form-container">
+		<mat-form-field appearance="fill">
+			<mat-label>Name</mat-label>
+			<input matInput formControlName="name" />
+			<mat-error *ngIf="spaceMarineForm.get('name')?.hasError('required') && spaceMarineForm.get('name')?.touched">
+				Name is required.
+			</mat-error>
+		</mat-form-field>
+
+		<div formGroupName="coordinates" class="coordinates-group">
+			<mat-form-field appearance="fill">
+				<mat-label>X Coordinate</mat-label>
+				<input matInput formControlName="x" />
+			</mat-form-field>
+
+			<mat-form-field appearance="fill">
+				<mat-label>Y Coordinate</mat-label>
+				<input matInput formControlName="y" />
+			</mat-form-field>
+		</div>
+
+		<mat-form-field appearance="fill">
+			<mat-label>Health</mat-label>
+			<input matInput formControlName="health" />
+		</mat-form-field>
+
+		<mat-form-field appearance="fill">
+			<mat-label>Height</mat-label>
+			<input matInput formControlName="height" />
+		</mat-form-field>
+
+		<mat-form-field appearance="fill">
+			<mat-label>Category</mat-label>
+			<mat-select formControlName="category">
+				<mat-option *ngFor="let category of categories" [value]="category">{{ category }}</mat-option>
+			</mat-select>
+		</mat-form-field>
+
+		<mat-form-field appearance="fill">
+			<mat-label>Weapon Type</mat-label>
+			<mat-select formControlName="weaponType">
+				<mat-option *ngFor="let weapon of weapons" [value]="weapon">{{ weapon }}</mat-option>
+			</mat-select>
+		</mat-form-field>
+
+		<div formGroupName="chapter" class="chapter-group">
+			<mat-form-field appearance="fill">
+				<mat-label>Chapter Name</mat-label>
+				<input matInput formControlName="name" />
+			</mat-form-field>
+
+			<mat-form-field appearance="fill">
+				<mat-label>Marines Count</mat-label>
+				<input matInput formControlName="marinesCount" />
+			</mat-form-field>
+
+			<mat-form-field appearance="fill">
+				<mat-label>World</mat-label>
+				<input matInput formControlName="world" />
+			</mat-form-field>
+		</div>
+
+		<button mat-raised-button color="primary" type="submit" [disabled]="spaceMarineForm.invalid">Update</button>
+	</form>
+</mat-card>
