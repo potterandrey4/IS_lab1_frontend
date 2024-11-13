@@ -20,8 +20,8 @@ export class HeaderComponent implements OnInit {
 		this.authService.isLoggedIn$.subscribe(status => {
 			this.isLoggedIn = status;
 		});
-		this.authService.email$.subscribe(email => {
-			this.username = email;
+		this.authService.name$.subscribe(name => {
+			this.username = name;
 		});
 
 	}

@@ -39,7 +39,7 @@ export class SignInComponent implements OnInit{
 	ngOnInit() {
 		this.signInForm = this.fb.group(
 			{
-				email: ['', [Validators.required, Validators.pattern("^[a-z0-9._%+-]+@[a-z0-9.-]+\\.[a-z]{2,4}$")]],
+				name: ['', [Validators.required, noWhitespaceValidator]],
 				password: ['', [Validators.required, Validators.minLength(6), noWhitespaceValidator]],
 			}
 		);
@@ -53,7 +53,7 @@ export class SignInComponent implements OnInit{
 
 		const hashedPassword = CryptoJS.MD5(this.signInForm.get('password')?.value).toString();
 		const formData = {
-			email: this.signInForm.get('email')?.value,
+			name: this.signInForm.get('name')?.value,
 			password: hashedPassword
 		};
 
@@ -75,7 +75,7 @@ export class SignInComponent implements OnInit{
 			(response: any) => {
 				if (response.token) {
 					this.toastr.success('Успешный вход!', 'Успех');
-					this.authService.setToken(response.token, formData.email);
+					this.authService.setToken(response.token, formData.name);
 					this.router.navigate(['/']);
 				}
 			},

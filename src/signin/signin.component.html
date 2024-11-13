@@ -2,13 +2,13 @@
 	<h2>Вход в систему</h2>
 	<form [formGroup]="signInForm" (ngSubmit)="onLogin()">
 		<mat-form-field appearance="outline">
-			<mat-label>Почта</mat-label>
-			<input matInput formControlName="email" required>
-			<mat-error *ngIf="signInForm.get('email')?.hasError('required')">
-				Email обязателен
+			<mat-label>Логин</mat-label>
+			<input matInput formControlName="name" required>
+			<mat-error *ngIf="signInForm.get('name')?.hasError('required')">
+				Логин обязателен
 			</mat-error>
-			<mat-error *ngIf="signInForm.get('email')?.hasError('pattern')">
-				Введите корректный адрес электронной почты
+			<mat-error *ngIf="signInForm.get('name')?.hasError('noWhitespaceValidator')">
+				Логин не может состоять из пробельных символов
 			</mat-error>
 		</mat-form-field>
 

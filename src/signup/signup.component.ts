@@ -41,7 +41,6 @@ export class SignUpComponent implements OnInit {
 		this.signUpForm = this.fb.group(
 			{
 				username: ['', [Validators.required, Validators.minLength(1), noWhitespaceValidator]],
-				email: ['', [Validators.required, Validators.pattern("^[a-z0-9._%+-]+@[a-z0-9.-]+\\.[a-z]{2,4}$")]],
 				password: ['', [Validators.required, Validators.minLength(6), noWhitespaceValidator]],
 				confirmPassword: ['', [Validators.required, this.matchPasswords.bind(this)]]
 			}
@@ -63,7 +62,6 @@ export class SignUpComponent implements OnInit {
 		const hashedPassword = CryptoJS.MD5(this.signUpForm.get('password')?.value).toString();
 		const formData = {
 			name: this.signUpForm.get('username')?.value,
-			email: this.signUpForm.get('email')?.value,
 			password: hashedPassword
 		};
 
@@ -73,7 +71,7 @@ export class SignUpComponent implements OnInit {
 				if (error.name === 'TimeoutError') {
 					this.toastr.error('Превышено время ожидания.', 'Ошибка сервера:');
 				} else if (error.status === 409) {
-					this.toastr.info("Данный email занят, попробуйте другой или войдите в существующий аккаунт");
+					this.toastr.info("Данный логин занят, попробуйте другой или войдите в существующий аккаунт");
 				} else if (error.status === 0) {
 					this.toastr.error('Сервер недоступен', 'Ошибка сервера');
 				}
@@ -83,7 +81,7 @@ export class SignUpComponent implements OnInit {
 			(response: any) => {
 				if (response.token) {
 					this.toastr.success('Вы зарегистрировались');
-					this.authService.setToken(response.token, formData.email);
+					this.authService.setToken(response.token, formData.name);
 					this.router.navigate(['/']);
 				} else {
 					this.toastr.error(response.error, 'Ошибка регистрации');

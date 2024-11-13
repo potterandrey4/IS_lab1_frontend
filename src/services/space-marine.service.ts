@@ -1,8 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { ToastrService } from 'ngx-toastr';
 import { Observable } from 'rxjs';
-import {SpaceMarine} from '../models/space-marine.model';
+import { SpaceMarine } from '../models/space-marine.model';
 
 @Injectable({
 	providedIn: 'root',
@@ -10,7 +9,7 @@ import {SpaceMarine} from '../models/space-marine.model';
 export class SpaceMarineService {
 	private baseUrl = 'http://localhost:8080/space-marine';
 
-	constructor(private http: HttpClient, private toastr: ToastrService) {}
+	constructor(private http: HttpClient) {}
 
 	private getHeaders(): HttpHeaders {
 		const token = localStorage.getItem('authToken');
@@ -40,13 +39,13 @@ export class SpaceMarineService {
 		return this.http.post(`${this.baseUrl}/add`, formData, options);
 	}
 
-	getAllSpaceMarines(): Observable<any> {
+	getAllSpaceMarines(): Observable<SpaceMarine[]> {
 		const options = { headers: this.getHeaders() };
-		return this.http.post(`${this.baseUrl}/all-objects`, null, options);
+		return this.http.post<SpaceMarine[]>(`${this.baseUrl}/all-objects`, null, options);
 	}
 
-	getUserSpaceMarines(): Observable<any> {
+	getUserSpaceMarines(): Observable<SpaceMarine[]> {
 		const options = { headers: this.getHeaders() };
-		return this.http.post(`${this.baseUrl}/user-objects`, null, options);
+		return this.http.post<SpaceMarine[]>(`${this.baseUrl}/user-objects`, null, options);
 	}
 }

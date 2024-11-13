@@ -5,7 +5,7 @@ export interface Coordinates {
 
 export interface Chapter {
 	name: string;
-	marinesCount: number;
+	marinesCount: string;
 	world: string;
 }
 

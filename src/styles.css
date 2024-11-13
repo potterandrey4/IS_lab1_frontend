@@ -104,3 +104,24 @@ mat-card {
 	box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
 	color: var(--text-color);
 }
+
+/* create компоненты */
+.mat-mdc-card {
+	margin-top: 100px;
+}
+
+label {
+	display: block;
+	margin: 5px 0;
+}
+
+input, select {
+	width: 100%;
+	padding: 8px;
+	margin-bottom: 10px;
+}
+
+
+button[disabled] {
+	background-color: #cccccc;
+}

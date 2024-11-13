@@ -6,6 +6,7 @@ import { SignUpComponent } from '../signup/signup.component';
 import { EditSpaceMarineComponent } from '../edit-space-marine/edit-space-marine.component';
 import { CreateSpaceMarineComponent } from '../create-space-marine/create-space-marine.component';
 import { ControlPanelComponent } from '../control-panel/control-panel.component';
+import {CreateChapterComponent} from '../create-chapter/create-chapter.component';
 import { AuthGuard } from './auth.guard';
 
 export const routes: Routes = [
@@ -14,7 +15,8 @@ export const routes: Routes = [
 	{ path: 'signup', component: SignUpComponent },
 
 	{ path: 'control-panel', component: ControlPanelComponent, canActivate: [AuthGuard] },
-	{ path: 'control-panel/create', component: CreateSpaceMarineComponent, canActivate: [AuthGuard] },
+	{ path: 'control-panel/create-space-marine', component: CreateSpaceMarineComponent, canActivate: [AuthGuard] },
+	{ path: 'control-panel/create-chapter', component: CreateChapterComponent, canActivate: [AuthGuard] },
 	{ path: 'control-panel/edit/:id', component: EditSpaceMarineComponent, canActivate: [AuthGuard] }
 ];
 

@@ -19,8 +19,8 @@
 					[ngClass]="{'asc': sortColumn === 'id' && sortDirection === 'asc', 'desc': sortColumn === 'id' && sortDirection === 'desc'}">
 					ID
 				</th>
-				<th (click)="sortTable('user_email')"
-					[ngClass]="{'asc': sortColumn === 'user_email' && sortDirection === 'asc', 'desc': sortColumn === 'user_email' && sortDirection === 'desc'}">
+				<th (click)="sortTable('user_name')"
+					[ngClass]="{'asc': sortColumn === 'user_name' && sortDirection === 'asc', 'desc': sortColumn === 'user_name' && sortDirection === 'desc'}">
 					Владелец
 				</th>
 				<th (click)="sortTable('coordinates_x')"
@@ -33,19 +33,19 @@
 				</th>
 				<th (click)="sortTable('name')"
 					[ngClass]="{'asc': sortColumn === 'name' && sortDirection === 'asc', 'desc': sortColumn === 'name' && sortDirection === 'desc'}">
-					Имя корабля
+					Имя SpaceMarine'а
 				</th>
 				<th (click)="sortTable('chapter_name')"
 					[ngClass]="{'asc': sortColumn === 'chapter_name' && sortDirection === 'asc', 'desc': sortColumn === 'chapter_name' && sortDirection === 'desc'}">
-					Название экипажа
+					Название Ордена
 				</th>
 				<th (click)="sortTable('chapter_marinesCount')"
 					[ngClass]="{'asc': sortColumn === 'chapter_marinesCount' && sortDirection === 'asc', 'desc': sortColumn === 'chapter_marinesCount' && sortDirection === 'desc'}">
-					Численность экипажа
+					Численность Ордена
 				</th>
 				<th (click)="sortTable('chapter_world')"
 					[ngClass]="{'asc': sortColumn === 'chapter_world' && sortDirection === 'asc', 'desc': sortColumn === 'chapter_world' && sortDirection === 'desc'}">
-					Мир экипажа
+					Мир Ордена
 				</th>
 				<th (click)="sortTable('height')"
 					[ngClass]="{'asc': sortColumn === 'height' && sortDirection === 'asc', 'desc': sortColumn === 'height' && sortDirection === 'desc'}">
@@ -70,23 +70,23 @@
 			<tbody *ngIf="spaceMarines && spaceMarines.length > 0">
 			<tr *ngFor="let marine of spaceMarines">
 				<td>{{ marine.id }}</td>
-				<td>{{ marine.user_email }}</td>
+				<td>{{ marine.userName }}</td>
 				<td>{{ marine.coordinates_x }}; {{ marine.coordinates_y }}</td>
 				<td>{{ formatDate(marine.creationDate) }}</td>
 				<td>{{ marine.name }}</td>
-				<td>{{ marine.chapter_name }}</td>
-				<td>{{ marine.chapter_marinesCount }}</td>
-				<td>{{ marine.chapter_world }}</td>
+				<td>{{ marine.chapter.name }}</td>
+				<td>{{ marine.chapter.count }}</td>
+				<td>{{ marine.chapter.world }}</td>
 				<td>{{ marine.height }}</td>
 				<td>{{ marine.health }}</td>
 				<td>{{ marine.category }}</td>
 				<td>{{ marine.weaponType }}</td>
-				<td *ngIf="marine.user_email === currentUserEmail">
+				<td *ngIf="marine.userName === currentUserName">
 					<button mat-icon-button (click)="editMarine(marine)" class="button_in_line">
 						<mat-icon>edit</mat-icon>
 					</button>
 				</td>
-				<td *ngIf="marine.user_email === currentUserEmail">
+				<td *ngIf="marine.userName === currentUserName">
 					<button mat-icon-button (click)="deleteMarine(marine)" class="button_in_line">
 						<mat-icon>delete</mat-icon>
 					</button>

@@ -13,8 +13,8 @@ export class AuthService {
 	private loggedInSubject = new BehaviorSubject<boolean>(this.hasToken());
 	public isLoggedIn$ = this.loggedInSubject.asObservable();
 
-	private emailSubject = new BehaviorSubject<string | null>(this.getStoredEmail());
-	public email$ = this.emailSubject.asObservable();
+	private nameSubject = new BehaviorSubject<string | null>(this.getStoredName());
+	public name$ = this.nameSubject.asObservable();
 
 	constructor(private http: HttpClient, private toastr: ToastrService) {}
 
@@ -26,19 +26,19 @@ export class AuthService {
 		return this.http.post(`${this.apiUrl}/signup`, formData);
 	}
 
-	setToken(token: string, email: string): void {
+	setToken(token: string, name: string): void {
 		localStorage.setItem('authToken', token);
-		localStorage.setItem('userEmail', email);
+		localStorage.setItem('userName', name);
 		this.loggedInSubject.next(true);
-		this.emailSubject.next(email);
+		this.nameSubject.next(name);
 	}
 
 	getToken(): string | null {
 		return localStorage.getItem('authToken');
 	}
 
-	private getStoredEmail(): string | null {
-		return localStorage.getItem('userEmail');
+	private getStoredName(): string | null {
+		return localStorage.getItem('userName');
 	}
 
 	private hasToken(): boolean {
@@ -47,9 +47,9 @@ export class AuthService {
 
 	logout(): void {
 		localStorage.removeItem('authToken');
-		localStorage.removeItem('userEmail'); // Удаление email
+		localStorage.removeItem('userName');
 		this.loggedInSubject.next(false);
-		this.emailSubject.next(null);
+		this.nameSubject.next(null);
 	}
 
 	verifyToken(): Observable<boolean> {
@@ -80,7 +80,7 @@ export class AuthService {
 		);
 	}
 
-	getCurrentUserEmail(): string | null {
-		return this.emailSubject.getValue();
+	getCurrentUserName(): string | null {
+		return this.nameSubject.getValue();
 	}
 }

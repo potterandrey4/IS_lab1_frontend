@@ -7,6 +7,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import {MatIcon} from '@angular/material/icon';
 import {MatIconButton} from '@angular/material/button';
+import {NotificationService} from '../services/notification.service';
 
 @Component({
 	standalone: true,
@@ -19,21 +20,21 @@ import {MatIconButton} from '@angular/material/button';
 export class HomeComponent {
 	isLoggedIn = false;
 	spaceMarines: any[] = [];
-	currentUserEmail: string | null = '';
+	currentUserName: string | null = '';
 	isLoading = false;
 	selectedView: 'all' | 'mine' = 'all';
 	sortColumn: string = '';
 	sortDirection: 'asc' | 'desc' = 'asc';
 
 
-	constructor(private authService: AuthService, private router: Router, private spaceMarineService: SpaceMarineService, private datePipe: DatePipe) {}
+	constructor(private authService: AuthService, private router: Router, private spaceMarineService: SpaceMarineService, private datePipe: DatePipe, private notificationService : NotificationService) {}
 
 	ngOnInit() {
 		this.authService.isLoggedIn$.subscribe(loggedIn => {
 			this.isLoggedIn = loggedIn;
 			this.loadSpaceMarines();
 			if (this.isLoggedIn) {
-				this.currentUserEmail = this.authService.getCurrentUserEmail();
+				this.currentUserName = this.authService.getCurrentUserName();
 			}
 
 		});
@@ -58,7 +59,6 @@ export class HomeComponent {
 					this.isLoading = false;
 				},
 				error => {
-					console.error(error);
 					this.isLoading = false;
 				}
 			);
@@ -84,11 +84,11 @@ export class HomeComponent {
 		console.log(marine.id);
 		this.spaceMarineService.delete(marine.id).subscribe({
 			next: (response) => {
-				console.log("Space Marine удален", response);
+				this.notificationService.success("Space Marine удален", response);
 				this.loadSpaceMarines();
 			},
 			error: (error) => {
-				console.error("Ошибка при удалении объекта:", error);
+				this.notificationService.error("Ошибка при удалении объекта:", error);
 			}
 		});
 	}
