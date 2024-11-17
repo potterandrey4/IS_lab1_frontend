@@ -1,23 +1,24 @@
-import { Component } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { AuthService } from '../services/auth.service';
-import {CommonModule, DatePipe} from '@angular/common';
-import { Router, RouterLink } from '@angular/router';
+import { CommonModule, DatePipe } from '@angular/common';
+import { Router } from '@angular/router';
 import { SpaceMarineService } from '../services/space-marine.service';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
-import {MatIcon} from '@angular/material/icon';
-import {MatIconButton} from '@angular/material/button';
-import {NotificationService} from '../services/notification.service';
+import { MatIcon } from '@angular/material/icon';
+import { MatIconButton } from '@angular/material/button';
+import { NotificationService } from '../services/notification.service';
+import { Subscription } from 'rxjs';
 
 @Component({
 	standalone: true,
 	selector: 'app-home',
 	templateUrl: './home.component.html',
 	styleUrls: ['./home.component.css'],
-	imports: [CommonModule, RouterLink, ReactiveFormsModule, FormsModule, MatButtonToggleModule, MatIcon, MatIconButton],
+	imports: [CommonModule, ReactiveFormsModule, FormsModule, MatButtonToggleModule, MatIcon, MatIconButton],
 	providers: [DatePipe]
 })
-export class HomeComponent {
+export class HomeComponent implements OnInit, OnDestroy {
 	isLoggedIn = false;
 	spaceMarines: any[] = [];
 	currentUserName: string | null = '';
@@ -25,9 +26,15 @@ export class HomeComponent {
 	selectedView: 'all' | 'mine' = 'all';
 	sortColumn: string = '';
 	sortDirection: 'asc' | 'desc' = 'asc';
+	private spaceMarineUpdateSubscription: Subscription = new Subscription(); // для подписки
 
-
-	constructor(private authService: AuthService, private router: Router, private spaceMarineService: SpaceMarineService, private datePipe: DatePipe, private notificationService : NotificationService) {}
+	constructor(
+		private authService: AuthService,
+		private router: Router,
+		private spaceMarineService: SpaceMarineService,
+		private datePipe: DatePipe,
+		private notificationService: NotificationService
+	) {}
 
 	ngOnInit() {
 		this.authService.isLoggedIn$.subscribe(loggedIn => {
@@ -36,8 +43,17 @@ export class HomeComponent {
 			if (this.isLoggedIn) {
 				this.currentUserName = this.authService.getCurrentUserName();
 			}
-
 		});
+
+		this.spaceMarineUpdateSubscription = this.spaceMarineService.getSpaceMarinesUpdates().subscribe(() => {
+			this.loadSpaceMarines();
+		});
+	}
+
+	ngOnDestroy() {
+		if (this.spaceMarineUpdateSubscription) {
+			this.spaceMarineUpdateSubscription.unsubscribe();
+		}
 	}
 
 	control_panel() {
@@ -84,11 +100,11 @@ export class HomeComponent {
 		console.log(marine.id);
 		this.spaceMarineService.delete(marine.id).subscribe({
 			next: (response) => {
-				this.notificationService.success("Space Marine удален", response);
+				this.notificationService.success('Space Marine удален', response);
 				this.loadSpaceMarines();
 			},
 			error: (error) => {
-				this.notificationService.error("Ошибка при удалении объекта:", error);
+				this.notificationService.error('Ошибка при удалении объекта:', error);
 			}
 		});
 	}
@@ -122,6 +138,4 @@ export class HomeComponent {
 			return this.sortDirection === 'asc' ? comparison : -comparison;
 		});
 	}
-
-
 }

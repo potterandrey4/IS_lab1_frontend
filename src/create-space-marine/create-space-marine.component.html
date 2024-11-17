@@ -38,7 +38,7 @@
 
 		<mat-form-field appearance="fill">
 			<mat-label>Здоровье</mat-label>
-			<input matInput id="health" formControlName="health" />
+			<input matInput id="health" formControlName="health" (input)="validateNumber($event, 'integer')"/>
 			<mat-error *ngIf="spaceMarineForm.get('health')?.hasError('required') && spaceMarineForm.get('health')?.touched">
 				Обязательное поле.
 			</mat-error>
@@ -55,10 +55,7 @@
 
 		<mat-form-field appearance="fill">
 			<mat-label>Рост</mat-label>
-			<input matInput id="height" formControlName="height" />
-			<mat-error *ngIf="spaceMarineForm.get('height')?.hasError('required') && spaceMarineForm.get('height')?.touched">
-				Обязательное поле.
-			</mat-error>
+			<input matInput id="height" formControlName="height" (input)="validateNumber($event, 'float')"/>
 			<mat-error *ngIf="spaceMarineForm.get('height')?.hasError('notANumber') && spaceMarineForm.get('height')?.touched">
 				Рост должно быть числом.
 			</mat-error>

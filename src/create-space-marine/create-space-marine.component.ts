@@ -1,11 +1,5 @@
 import {Component, OnInit} from '@angular/core';
-import {
-	FormGroup,
-	FormBuilder,
-	Validators,
-	AbstractControl,
-	ValidationErrors, ReactiveFormsModule, ValidatorFn
-} from '@angular/forms';
+import {FormBuilder, FormGroup, ReactiveFormsModule, Validators} from '@angular/forms';
 import {CommonModule} from '@angular/common';
 import {ToastrService} from 'ngx-toastr';
 import {MatFormFieldModule} from '@angular/material/form-field';
@@ -18,7 +12,7 @@ import {SpaceMarineService} from '../services/space-marine.service';
 import {catchError, timeout} from 'rxjs/operators';
 import {throwError} from 'rxjs';
 import {Router} from '@angular/router';
-import {maxValue, minValue, noWhitespaceValidator, numberValidator} from '../validators/custom-validators';
+import {maxValue, minValue, validateNumber} from '../validators/custom-validators';
 import {ChapterService} from '../services/chapter.service';
 
 
@@ -40,10 +34,10 @@ import {ChapterService} from '../services/chapter.service';
 })
 export class CreateSpaceMarineComponent implements OnInit {
 	spaceMarineForm: FormGroup;
-	chapters: any[] = [];
 
-	categories: string[] = ['Scout', 'Aggressor', 'Inceptor', 'Suppressor', 'Terminator'];
-	weapons: string[] = ['Heavy boltgun', 'Bolt pistol', 'Bolt rifle', 'Combi flamer', 'Gravy gun'];
+	chapters: any[] = [];
+	categories: string[] = ['SCOUT', 'Aggressor', 'Inceptor', 'Suppressor', 'Terminator'];
+	weapons: string[] = ['HEAVY_BOLTGUN', 'Bolt pistol', 'Bolt rifle', 'Combi flamer', 'Gravy gun'];
 
 	constructor(private spaceMarineService: SpaceMarineService, private chapterService : ChapterService, private fb : FormBuilder, private toastr: ToastrService, private router: Router,) {
 		this.spaceMarineForm = this.fb.group({
@@ -52,8 +46,8 @@ export class CreateSpaceMarineComponent implements OnInit {
 				x: ['1', [Validators.required, Validators.pattern(/^-?\d+$/), minValue(-585)]],
 				y: ['1', [Validators.required, Validators.pattern(/^-?\d+(\.\d{1,15})?$/), maxValue(118)]],
 			}),
-			health: ['1', [Validators.required, numberValidator(), minValue(0)]],
-			height: ['1', [Validators.required, numberValidator(), minValue(0)]],
+			health: ['1', [Validators.required, Validators.pattern(/^-?\d+$/), minValue(0)]],
+			height: ['1', [Validators.pattern(/^-?\d+(\.\d{1,15})?$/), minValue(0)]],
 			category: [this.categories[0], [Validators.required]],
 			weaponType: [this.weapons[0], [Validators.required]],
 			chapter: this.fb.group({
@@ -78,21 +72,6 @@ export class CreateSpaceMarineComponent implements OnInit {
 				this.toastr.error('Не удалось загрузить Ордена');
 			}
 		);
-	}
-
-	validateNumber(event: Event, type: 'integer' | 'float') {
-		const input = event.target as HTMLInputElement;
-		if (type === 'integer') {
-			input.value = input.value.replace(/[^-?\d]/g, '');
-		} else if (type === 'float') {
-			input.value = input.value.replace(/[^-?\d.]/g, '');
-			if (input.value.indexOf('.') !== input.value.lastIndexOf('.')) {
-				input.value = input.value.slice(0, input.value.lastIndexOf('.'));
-			}
-			if (input.value.indexOf('-') > 0) {
-				input.value = input.value.replace('-', '');
-			}
-		}
 	}
 
 	onChapterSelect(event: any) {
@@ -138,8 +117,8 @@ export class CreateSpaceMarineComponent implements OnInit {
 
 	onSubmit() {
 		this.trimFormValues(this.spaceMarineForm);
-		const formData = this.spaceMarineForm.value;
 		if (this.spaceMarineForm.valid) {
+			const formData = this.spaceMarineForm.value;
 			this.spaceMarineService.add(formData).pipe(
 				timeout(3000),
 				catchError(error => {
@@ -165,4 +144,6 @@ export class CreateSpaceMarineComponent implements OnInit {
 			this.toastr.error('Форма содержит ошибки!', 'Ошибка');
 		}
 	}
+
+	protected readonly validateNumber = validateNumber;
 }

@@ -5,8 +5,7 @@ import {MatError, MatFormField, MatLabel} from '@angular/material/form-field';
 import {MatInput} from '@angular/material/input';
 import {NgIf} from '@angular/common';
 import {ActivatedRoute, Router} from '@angular/router';
-import {SpaceMarineService} from '../services/space-marine.service';
-import {maxValue, minValue, noWhitespaceValidator, numberValidator} from '../validators/custom-validators';
+import {maxValue, minValue, noWhitespaceValidator} from '../validators/custom-validators';
 import {ChapterService} from '../services/chapter.service';
 import {MatButton} from '@angular/material/button';
 import {catchError, timeout} from 'rxjs/operators';
@@ -41,7 +40,7 @@ export class CreateChapterComponent implements OnInit {
 	) {
 		this.chapterForm = this.fb.group({
 			name: ['', [Validators.required, Validators.minLength(1), noWhitespaceValidator]],
-			marinesCount: ['', [Validators.required, numberValidator(), minValue(1), maxValue(1000), noWhitespaceValidator]],
+			marinesCount: ['', [Validators.required, Validators.pattern(/^-?\d+$/), minValue(1), maxValue(1000), noWhitespaceValidator]],
 			world: ['', ],
 		});
 	}

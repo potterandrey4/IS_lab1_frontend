@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import { Router } from '@angular/router';
 import { MatButtonModule } from '@angular/material/button';
 import { SpaceMarineService } from '../services/space-marine.service';
@@ -14,7 +14,7 @@ import {NgForOf, NgIf} from '@angular/common';
 	styleUrls: ['./control-panel.component.css'],
 	providers: [SpaceMarineService]
 })
-export class ControlPanelComponent {
+export class ControlPanelComponent implements OnInit {
 	averageHeight: number | null = null;
 	categoryCount: number | null = null;
 	searchResults: SpaceMarine[] = [];
@@ -23,6 +23,8 @@ export class ControlPanelComponent {
 	nameSubstring: string = '';
 
 	constructor(private router: Router, private spaceMarineService: SpaceMarineService) {}
+
+	ngOnInit(): void {}
 
 	create_space_marine() {
 		this.router.navigate(['/control-panel/create-space-marine']);
@@ -38,27 +40,26 @@ export class ControlPanelComponent {
 				const totalHeight = data.reduce((sum, marine) => sum + marine.height, 0);
 				this.averageHeight = data.length ? totalHeight / data.length : 0;
 			},
-			error: error => console.error(`Ошибка при расчёте средней высоты:`, error)
+			error: error => console.error('Ошибка при расчете средней высоты:', error)
 		});
 	}
 
-	// Вернуть количество объектов с указанной категорией
 	getCategoryCount() {
 		this.spaceMarineService.getAllSpaceMarines().subscribe({
 			next: data => {
 				this.categoryCount = data.filter(marine => marine.category === this.category).length;
 			},
-			error: error => console.error(`Ошибка при получении количества объектов по категории:`, error)
+			error: error => console.error('Ошибка при получении количества объектов по категории:', error)
 		});
 	}
 
-	// Найти объекты, у которых имя начинается с заданной подстроки
 	searchByNameSubstring() {
 		this.spaceMarineService.getAllSpaceMarines().subscribe({
 			next: data => {
 				this.searchResults = data.filter(marine => marine.name.startsWith(this.nameSubstring));
 			},
-			error: error => console.error(`Ошибка при поиске по подстроке имени:`, error)
+			error: error => console.error('Ошибка при поиске по подстроке имени:', error)
 		});
 	}
+
 }
