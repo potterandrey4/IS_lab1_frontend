@@ -1,36 +1,37 @@
-import {Component, OnInit} from '@angular/core';
-import {CommonModule} from '@angular/common';
-import {MatFormFieldModule} from '@angular/material/form-field';
-import {MatInputModule} from '@angular/material/input';
-import {MatButtonModule} from '@angular/material/button';
-import {Router} from '@angular/router';
-import {AuthService} from '../services/auth.service';
+import {Component} from '@angular/core';
+import {AdminAuthService} from '../admin-auth.service';
 import {
 	AbstractControl,
 	FormBuilder,
 	FormGroup,
+	FormsModule,
 	ReactiveFormsModule,
 	ValidationErrors,
 	Validators
 } from '@angular/forms';
-import * as CryptoJS from 'crypto-js';
+import {MatError, MatFormField, MatLabel} from '@angular/material/form-field';
+import {MatInput} from '@angular/material/input';
+import {NgIf} from '@angular/common';
+import {AuthService} from '../../services/auth.service';
+import {Router} from '@angular/router';
 import {ToastrService} from 'ngx-toastr';
+import {noWhitespaceValidator} from '../../validators/custom-validators';
+import * as CryptoJS from 'crypto-js';
 import {catchError, timeout} from 'rxjs/operators';
 import {throwError} from 'rxjs';
-import {noWhitespaceValidator} from '../validators/custom-validators';
-
 
 @Component({
-	selector: 'app-signup',
+	selector: 'app-admin-register',
+	templateUrl: './admin-signup.component.html',
+	imports: [FormsModule, MatError, MatFormField, MatInput, MatLabel, NgIf, ReactiveFormsModule],
 	standalone: true,
-	templateUrl: './signup.component.html',
-	imports: [CommonModule, MatFormFieldModule, MatInputModule, MatButtonModule, ReactiveFormsModule]
 })
-export class SignUpComponent implements OnInit {
+export class AdminSignupComponent {
 	signUpForm!: FormGroup;
 
 	constructor(
 		private authService: AuthService,
+		private adminAuthService: AdminAuthService,
 		private router: Router,
 		private toastr: ToastrService,
 		private fb: FormBuilder
@@ -42,7 +43,8 @@ export class SignUpComponent implements OnInit {
 			{
 				username: ['', [Validators.required, Validators.minLength(1), noWhitespaceValidator]],
 				password: ['', [Validators.required, Validators.minLength(6), noWhitespaceValidator]],
-				confirmPassword: ['', [Validators.required, this.matchPasswords.bind(this)]]
+				confirmPassword: ['', [Validators.required, this.matchPasswords.bind(this)]],
+				reason: ['', Validators.required]
 			}
 		);
 	}
@@ -63,13 +65,14 @@ export class SignUpComponent implements OnInit {
 		const formData = {
 			name: this.signUpForm.get('username')?.value,
 			password: hashedPassword,
-			isAdmin: false
+			isAdmin: true
 		};
-
 		const adminRequestData = {
+			name: formData.name,
+			reason: this.signUpForm.get('reason')?.value
 		}
 
-		this.authService.signup(formData, adminRequestData).pipe(
+		this.adminAuthService.signup(formData, adminRequestData).pipe(
 			timeout(3000),
 			catchError(error => {
 				if (error.name === 'TimeoutError') {
@@ -84,7 +87,7 @@ export class SignUpComponent implements OnInit {
 		).subscribe(
 			(response: any) => {
 				if (response.token) {
-					this.toastr.success('Вы зарегистрировались');
+					this.toastr.success('Ожидайте её обработки', 'Ваша заявка подана');
 					this.authService.setToken(response.token, formData.name);
 					this.router.navigate(['/']);
 				} else {

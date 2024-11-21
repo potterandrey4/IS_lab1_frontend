@@ -14,6 +14,7 @@ import {throwError} from 'rxjs';
 import {Router} from '@angular/router';
 import {maxValue, minValue, validateNumber} from '../validators/custom-validators';
 import {ChapterService} from '../services/chapter.service';
+import {NotificationService} from '../services/notification.service';
 
 
 @Component({
@@ -36,10 +37,25 @@ export class CreateSpaceMarineComponent implements OnInit {
 	spaceMarineForm: FormGroup;
 
 	chapters: any[] = [];
-	categories: string[] = ['SCOUT', 'Aggressor', 'Inceptor', 'Suppressor', 'Terminator'];
-	weapons: string[] = ['HEAVY_BOLTGUN', 'Bolt pistol', 'Bolt rifle', 'Combi flamer', 'Gravy gun'];
+	categories: { [key: string]: string } = {
+		'SCOUT': 'Скаут',
+		'AGGRESSOR': 'Агрессор',
+		'INCEPTOR': 'Инцептор',
+		'SUPPRESSOR': 'Супрессор',
+		'TERMINATOR': 'Терминатор'
+	};
+	weapons: { [key: string]: string } = {
+		'HEAVY_BOLTGUN': 'Тяжёлый болтовой пистолет',
+		'BOLT_PISTOL': 'Болтовой пистолет',
+		'BOLT_RIFLE': 'Болтовая винтовка',
+		'COMBI_FLAMER': 'Комби огнемёт',
+		'GRAVY_GUN': 'Гравипушка'
+	};
+	translatedCategories = Object.values(this.categories);
+	translatedWeapons = Object.values(this.weapons);
 
-	constructor(private spaceMarineService: SpaceMarineService, private chapterService : ChapterService, private fb : FormBuilder, private toastr: ToastrService, private router: Router,) {
+
+	constructor(private spaceMarineService: SpaceMarineService, private chapterService: ChapterService, private fb: FormBuilder, private notificationService: NotificationService, private router: Router,) {
 		this.spaceMarineForm = this.fb.group({
 			name: ['1', [Validators.required]],
 			coordinates: this.fb.group({
@@ -69,7 +85,7 @@ export class CreateSpaceMarineComponent implements OnInit {
 				this.chapters = data;
 			},
 			(error) => {
-				this.toastr.error('Не удалось загрузить Ордена');
+				this.notificationService.error('Не удалось загрузить Ордена');
 			}
 		);
 	}
@@ -103,7 +119,6 @@ export class CreateSpaceMarineComponent implements OnInit {
 		}
 	}
 
-
 	private trimFormValues(formGroup: FormGroup): void {
 		Object.keys(formGroup.controls).forEach(key => {
 			const control = formGroup.get(key);
@@ -115,25 +130,37 @@ export class CreateSpaceMarineComponent implements OnInit {
 		});
 	}
 
+	getOriginalKey(translatedKey: string, map: { [key: string]: string }): string {
+		return Object.keys(map).find((key) => map[key] === translatedKey) || '';
+	}
+
 	onSubmit() {
 		this.trimFormValues(this.spaceMarineForm);
 		if (this.spaceMarineForm.valid) {
 			const formData = this.spaceMarineForm.value;
-			this.spaceMarineService.add(formData).pipe(
+			const payload = {
+				...formData,
+				category: this.getOriginalKey(formData.category, this.categories),
+				weaponType: this.getOriginalKey(formData.weaponType, this.weapons),
+			};
+
+			this.spaceMarineService.add(payload).pipe(
 				timeout(3000),
 				catchError(error => {
 					if (error.name === 'TimeoutError') {
-						this.toastr.error('Сервер не отвечает. Превышено время ожидания.', 'Ошибка входа:');
+						this.notificationService.error('Сервер не отвечает. Превышено время ожидания.', 'Ошибка входа:');
 					} else if (error.status === 0) {
-						this.toastr.error('Сервер недоступен', 'Ошибка входа:');
+						this.notificationService.error('Сервер недоступен', 'Ошибка входа:');
+					} else if (error.status === 409) {
+						this.notificationService.error('Пожалуйста, выберите другое имя', 'Орден с таким именем уже существует.')
 					} else {
-						this.toastr.error(error.message || 'Неизвестная ошибка',);
+						this.notificationService.error(error.message || 'Неизвестная ошибка',);
 					}
 					return throwError(() => error);
 				})
 			).subscribe(
 				(response: any) => {
-					this.toastr.success(response.message);
+					this.notificationService.success(response.message);
 					this.router.navigate(['/']);
 				},
 				error => {
@@ -141,7 +168,7 @@ export class CreateSpaceMarineComponent implements OnInit {
 				}
 			);
 		} else {
-			this.toastr.error('Форма содержит ошибки!', 'Ошибка');
+			this.notificationService.error('Форма содержит ошибки!', 'Ошибка');
 		}
 	}
 

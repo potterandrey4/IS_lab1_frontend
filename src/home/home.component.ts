@@ -1,59 +1,85 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
-import { AuthService } from '../services/auth.service';
-import { CommonModule, DatePipe } from '@angular/common';
-import { Router } from '@angular/router';
-import { SpaceMarineService } from '../services/space-marine.service';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { MatButtonToggleModule } from '@angular/material/button-toggle';
-import { MatIcon } from '@angular/material/icon';
-import { MatIconButton } from '@angular/material/button';
-import { NotificationService } from '../services/notification.service';
-import { Subscription } from 'rxjs';
+import {Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
+import {MatPaginator, MatPaginatorModule} from '@angular/material/paginator';
+import {MatSort, MatSortModule} from '@angular/material/sort';
+import {MatTableDataSource, MatTableModule} from '@angular/material/table';
+import {SpaceMarineService} from '../services/space-marine.service';
+import {WebSocketService} from '../services/web-socket.service';
+import {AuthService} from '../services/auth.service';
+import {Router} from '@angular/router';
+import {NotificationService} from '../services/notification.service';
+import {DatePipe, NgIf} from '@angular/common';
+import {MatIconModule} from '@angular/material/icon';
+import {MatFormField, MatLabel} from '@angular/material/form-field';
+import {MatButtonToggleModule} from '@angular/material/button-toggle';
+import {FormsModule} from '@angular/forms';
+import {MatInput} from '@angular/material/input';
+import {MatIconButton} from '@angular/material/button';
 
 @Component({
-	standalone: true,
 	selector: 'app-home',
 	templateUrl: './home.component.html',
 	styleUrls: ['./home.component.css'],
-	imports: [CommonModule, ReactiveFormsModule, FormsModule, MatButtonToggleModule, MatIcon, MatIconButton],
-	providers: [DatePipe]
+	imports: [
+		MatIconModule,
+		MatButtonToggleModule,
+		MatTableModule,
+		MatSortModule,
+		MatPaginatorModule,
+		MatIconButton,
+		MatLabel,
+		MatFormField,
+		FormsModule,
+		NgIf,
+		MatInput,
+	],
+	providers: [DatePipe],
+	standalone: true
 })
 export class HomeComponent implements OnInit, OnDestroy {
-	isLoggedIn = false;
+	displayedColumns: string[] = ['id', 'userName', 'coordinates', 'creationDate', 'name', 'chapterName', 'chapterCount', 'chapterWorld', 'height', 'health', 'category', 'weaponType', 'edit', 'delete'];
+
 	spaceMarines: any[] = [];
+	dataSource = new MatTableDataSource<any>();
+	isLoggedIn = false;
 	currentUserName: string | null = '';
-	isLoading = false;
 	selectedView: 'all' | 'mine' = 'all';
-	sortColumn: string = '';
-	sortDirection: 'asc' | 'desc' = 'asc';
-	private spaceMarineUpdateSubscription: Subscription = new Subscription(); // для подписки
+	isLoading = false;
+	isAdmin = false;
+
+	@ViewChild(MatPaginator) paginator!: MatPaginator;
+	@ViewChild(MatSort) sort!: MatSort;
 
 	constructor(
 		private authService: AuthService,
 		private router: Router,
 		private spaceMarineService: SpaceMarineService,
 		private datePipe: DatePipe,
-		private notificationService: NotificationService
+		private notificationService: NotificationService,
+		private webSocketService: WebSocketService
 	) {}
 
 	ngOnInit() {
-		this.authService.isLoggedIn$.subscribe(loggedIn => {
+		this.authService.isLoggedIn$.subscribe((loggedIn) => {
 			this.isLoggedIn = loggedIn;
-			this.loadSpaceMarines();
 			if (this.isLoggedIn) {
 				this.currentUserName = this.authService.getCurrentUserName();
+				this.loadSpaceMarines();
+
+				this.webSocketService.connect();
+				this.webSocketService.getMessages().subscribe((message) => {
+					if (message === 'add' || message === 'update' || message === 'delete') {
+						this.loadSpaceMarines();
+					}
+				});
 			}
 		});
-
-		this.spaceMarineUpdateSubscription = this.spaceMarineService.getSpaceMarinesUpdates().subscribe(() => {
-			this.loadSpaceMarines();
+		this.authService.isAdminIn$.subscribe((isAdmin) => {
+			this.isAdmin = isAdmin;
 		});
 	}
 
 	ngOnDestroy() {
-		if (this.spaceMarineUpdateSubscription) {
-			this.spaceMarineUpdateSubscription.unsubscribe();
-		}
+		this.webSocketService.disconnect();
 	}
 
 	control_panel() {
@@ -65,31 +91,37 @@ export class HomeComponent implements OnInit, OnDestroy {
 	}
 
 	loadSpaceMarines() {
-		if (this.isLoading) return;
+		if (this.isLoading) {
+			return;
+		}
 		this.isLoading = true;
 
-		if (this.selectedView === 'all') {
-			this.spaceMarineService.getAllSpaceMarines().subscribe(
-				data => {
-					this.spaceMarines = data;
-					this.isLoading = false;
-				},
-				error => {
-					this.isLoading = false;
-				}
-			);
-		} else {
-			this.spaceMarineService.getUserSpaceMarines().subscribe(
-				data => {
-					this.spaceMarines = data;
-					this.isLoading = false;
-				},
-				error => {
-					console.error(error);
-					this.isLoading = false;
-				}
-			);
+		const loadMethod = this.selectedView === 'all'
+			? this.spaceMarineService.getAllSpaceMarines()
+			: this.spaceMarineService.getUserSpaceMarines();
+
+		loadMethod.subscribe(
+			(data) => {
+				this.spaceMarines = data;
+				this.dataSource.data = data;
+				this.dataSource.paginator = this.paginator;
+				this.dataSource.sort = this.sort;
+				this.isLoading = false;
+			},
+			(error) => {
+				this.isLoading = false;
+			}
+		);
+	}
+
+	applyFilter(event: Event): void {
+		const input = event.target as HTMLInputElement;
+		if (input) {
+			this.dataSource.filter = input.value.trim().toLowerCase();
 		}
+	}
+	sortTable(column: string): void {
+		this.dataSource.sort = this.sort;
 	}
 
 	editMarine(marine: any) {
@@ -97,14 +129,13 @@ export class HomeComponent implements OnInit, OnDestroy {
 	}
 
 	deleteMarine(marine: any) {
-		console.log(marine.id);
 		this.spaceMarineService.delete(marine.id).subscribe({
 			next: (response) => {
-				this.notificationService.success('Space Marine удален', response);
+				this.notificationService.success('Space Marine удален', 'Успех');
 				this.loadSpaceMarines();
 			},
 			error: (error) => {
-				this.notificationService.error('Ошибка при удалении объекта:', error);
+				this.notificationService.error('Произошла ошибка при удалении объекта');
 			}
 		});
 	}
@@ -113,29 +144,7 @@ export class HomeComponent implements OnInit, OnDestroy {
 		return this.datePipe.transform(date, 'dd.MM.yyyy HH:mm:ss')!;
 	}
 
-	sortTable(column: string): void {
-		if (this.sortColumn === column) {
-			this.sortDirection = this.sortDirection === 'asc' ? 'desc' : 'asc';
-		} else {
-			this.sortColumn = column;
-			this.sortDirection = 'asc';
-		}
-		this.applySorting();
-	}
-
-	applySorting(): void {
-		this.spaceMarines.sort((a, b) => {
-			const aValue = a[this.sortColumn];
-			const bValue = b[this.sortColumn];
-
-			let comparison = 0;
-			if (aValue > bValue) {
-				comparison = 1;
-			} else if (aValue < bValue) {
-				comparison = -1;
-			}
-
-			return this.sortDirection === 'asc' ? comparison : -comparison;
-		});
+	space_marine_map() {
+		this.router.navigate([`/space-marine-map`])
 	}
 }

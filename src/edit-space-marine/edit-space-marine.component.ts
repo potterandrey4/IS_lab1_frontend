@@ -100,7 +100,7 @@ export class EditSpaceMarineComponent implements OnInit {
 				});
 			},
 			(error) => {
-				console.error('Ошибка при загрузке данных:', error);
+				this.toastr.error(error, 'Ошибка при загрузке данных:');
 			}
 		);
 	}

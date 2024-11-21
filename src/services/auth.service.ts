@@ -16,14 +16,20 @@ export class AuthService {
 	private nameSubject = new BehaviorSubject<string | null>(this.getStoredName());
 	public name$ = this.nameSubject.asObservable();
 
-	constructor(private http: HttpClient, private toastr: ToastrService) {}
+	private isAdminSubject = new BehaviorSubject<boolean>(false); // Изначально считаем, что пользователь не администратор
+	public isAdminIn$ = this.isAdminSubject.asObservable();
+
+
+	constructor(private http: HttpClient, private toastr: ToastrService) {
+		this.verifyAdminStatus();
+	}
 
 	login(formData: any): Observable<any> {
 		return this.http.post(`${this.apiUrl}/signin`, formData);
 	}
 
-	signup(formData: any): Observable<any> {
-		return this.http.post(`${this.apiUrl}/signup`, formData);
+	signup(formData: any, adminRequestData : any): Observable<any> {
+		return this.http.post(`${this.apiUrl}/signup`, {formData, adminRequestData});
 	}
 
 	setToken(token: string, name: string): void {
@@ -50,6 +56,7 @@ export class AuthService {
 		localStorage.removeItem('userName');
 		this.loggedInSubject.next(false);
 		this.nameSubject.next(null);
+		this.isAdminSubject.next(false);
 	}
 
 	verifyToken(): Observable<boolean> {
@@ -78,6 +85,25 @@ export class AuthService {
 				return of(false);
 			})
 		);
+	}
+
+	verifyAdminStatus(): void {
+		const token = this.getToken();
+		if (!token) {
+			this.isAdminSubject.next(false); // Если нет токена, значит, нет администратора
+			return;
+		}
+
+		const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
+		this.http.post<{ isAdmin: boolean }>(`${this.apiUrl}/user-status`, { headers }).pipe(
+			map((response) => {
+				this.isAdminSubject.next(response.isAdmin);
+			}),
+			catchError((error) => {
+				this.isAdminSubject.next(false);
+				return of(null);
+			})
+		).subscribe();
 	}
 
 	getCurrentUserName(): string | null {

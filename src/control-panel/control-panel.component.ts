@@ -5,13 +5,13 @@ import { SpaceMarineService } from '../services/space-marine.service';
 import { SpaceMarine } from '../models/space-marine.model';
 import {FormsModule} from '@angular/forms';
 import {NgForOf, NgIf} from '@angular/common';
+import {AdminAuthService} from '../admin/admin-auth.service';
 
 @Component({
 	selector: 'app-control-panel',
 	standalone: true,
 	imports: [MatButtonModule, FormsModule, NgIf, NgForOf],
 	templateUrl: './control-panel.component.html',
-	styleUrls: ['./control-panel.component.css'],
 	providers: [SpaceMarineService]
 })
 export class ControlPanelComponent implements OnInit {
@@ -21,17 +21,20 @@ export class ControlPanelComponent implements OnInit {
 	category: string = '';
 	categories: string[] = ['Scout', 'Aggressor', 'Inceptor', 'Suppressor', 'Terminator'];
 	nameSubstring: string = '';
+	isAdmin: boolean = false;
 
-	constructor(private router: Router, private spaceMarineService: SpaceMarineService) {}
+	constructor(private router: Router, private spaceMarineService: SpaceMarineService, private adminAuthService: AdminAuthService) {}
 
-	ngOnInit(): void {}
+	ngOnInit(): void {
+		this.isAdmin = this.adminAuthService.isAdmin();
+	}
 
 	create_space_marine() {
 		this.router.navigate(['/control-panel/create-space-marine']);
 	}
 
-	create_chapter() {
-		this.router.navigate(['/control-panel/create-chapter'])
+	control_panel_chapter() {
+		this.router.navigate(['/control-panel-chapter'])
 	}
 
 	calculateAvgHeight() {
@@ -62,4 +65,7 @@ export class ControlPanelComponent implements OnInit {
 		});
 	}
 
+	navigateToAdminPanel() {
+		this.router.navigate(['/admin-panel']);
+	}
 }

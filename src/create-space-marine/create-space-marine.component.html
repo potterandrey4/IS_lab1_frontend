@@ -70,8 +70,10 @@
 		<mat-form-field appearance="fill">
 			<mat-label>Категория</mat-label>
 			<mat-select id="category" formControlName="category">
-				<mat-option value="">Select a category</mat-option>
-				<mat-option *ngFor="let category of categories" [value]="category">{{ category }}</mat-option>
+				<mat-option value="">Выберите категорию</mat-option>
+				<mat-option *ngFor="let category of translatedCategories" [value]="category">
+					{{ category }}
+				</mat-option>
 			</mat-select>
 			<mat-error *ngIf="spaceMarineForm.get('category')?.hasError('required') && spaceMarineForm.get('category')?.touched">
 				Вы должны выбрать категорию.
@@ -81,8 +83,10 @@
 		<mat-form-field appearance="fill">
 			<mat-label>Тип оружия</mat-label>
 			<mat-select id="weaponType" formControlName="weaponType">
-				<mat-option value="">Select a category</mat-option>
-				<mat-option *ngFor="let weapon of weapons" [value]="weapon">{{ weapon }}</mat-option>
+				<mat-option value="">Выберите тип оружия</mat-option>
+				<mat-option *ngFor="let weapon of translatedWeapons" [value]="weapon">
+					{{ weapon }}
+				</mat-option>
 			</mat-select>
 			<mat-error *ngIf="spaceMarineForm.get('weaponType')?.hasError('required') && spaceMarineForm.get('weaponType')?.touched">
 				Вы должны выбрать тип оружия.
@@ -125,7 +129,7 @@
 				</mat-form-field>
 
 				<mat-form-field appearance="fill">
-					<mat-label>Числа бойцов</mat-label>
+					<mat-label>Число бойцов</mat-label>
 					<input matInput formControlName="marinesCount" [disabled]="true" />
 					<mat-error *ngIf="spaceMarineForm.get('chapter.marinesCount')?.hasError('required') && spaceMarineForm.get('chapter.marinesCount')?.touched">
 						Обязательное поле.

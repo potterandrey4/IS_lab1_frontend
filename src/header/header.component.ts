@@ -4,6 +4,7 @@ import { AuthService } from '../services/auth.service';
 import {MatButtonModule} from '@angular/material/button';
 import {CommonModule} from '@angular/common';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
+import {WebSocketService} from '../services/web-socket.service';
 
 @Component({
 	selector: 'app-header',
@@ -14,7 +15,7 @@ export class HeaderComponent implements OnInit {
 	isLoggedIn = false;
 	username: string | null = null;
 
-	constructor(private authService: AuthService, private router: Router) {}
+	constructor(private authService: AuthService, private webSocketService : WebSocketService, private router: Router) {}
 
 	ngOnInit(): void {
 		this.authService.isLoggedIn$.subscribe(status => {
@@ -32,6 +33,7 @@ export class HeaderComponent implements OnInit {
 
 	logout() {
 		this.authService.logout();
+		this.webSocketService.disconnect();
 		this.goHome();
 	}
 

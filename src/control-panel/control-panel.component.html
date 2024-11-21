@@ -1,6 +1,6 @@
 <div class="control-panel">
 	<button mat-raised-button color="primary" (click)="create_space_marine()">Создать Космодесантника</button>
-	<button mat-raised-button color="primary" (click)="create_chapter()">Создать Орден</button>
+	<button mat-raised-button color="primary" (click)="control_panel_chapter()">Управлять Орденами</button>
 
 	<div>
 		<button mat-raised-button color="accent" (click)="calculateAvgHeight()">Рассчитать среднюю высоту</button>
@@ -25,4 +25,7 @@
 			<li *ngFor="let marine of searchResults">{{ marine.name }} - ID: {{ marine.id }}</li>
 		</ul>
 	</div>
+</div>
+<div *ngIf="isAdmin">
+	<button mat-raised-button color="warn" (click)="navigateToAdminPanel()">Перейти в Админ-панель</button>
 </div>

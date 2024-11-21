@@ -36,12 +36,12 @@ export class CreateChapterComponent implements OnInit {
 		private chapterService: ChapterService,
 		private fb: FormBuilder,
 		private router: Router,
-		private notificationService : NotificationService
+		private notificationService: NotificationService
 	) {
 		this.chapterForm = this.fb.group({
 			name: ['', [Validators.required, Validators.minLength(1), noWhitespaceValidator]],
 			marinesCount: ['', [Validators.required, Validators.pattern(/^-?\d+$/), minValue(1), maxValue(1000), noWhitespaceValidator]],
-			world: ['', ],
+			world: ['',],
 		});
 	}
 
@@ -60,6 +60,8 @@ export class CreateChapterComponent implements OnInit {
 						this.notificationService.error('Сервер не отвечает. Превышено время ожидания.', 'Ошибка входа:');
 					} else if (error.status === 0) {
 						this.notificationService.error('Сервер недоступен', 'Ошибка входа:');
+					} else if (error.status === 409) {
+						this.notificationService.error('Пожалуйста, выберите другое имя', 'Орден с таким именем уже существует.')
 					} else {
 						this.notificationService.error(error.message || 'Неизвестная ошибка',);
 					}

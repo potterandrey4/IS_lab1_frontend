@@ -125,3 +125,65 @@ input, select {
 button[disabled] {
 	background-color: #cccccc;
 }
+
+.control-panel {
+	display: flex;
+	justify-content: space-around;
+	background-color: var(--secondary-color);
+	padding: 20px;
+	border: 1px solid var(--border-color);
+	border-radius: 8px;
+	margin-top: 100px;
+}
+
+.control-panel button {
+	font-weight: bold;
+	text-transform: uppercase;
+	padding: 10px 20px;
+}
+
+
+
+.data-table {
+	width: 90%;
+	border-collapse: collapse;
+	margin: 20px auto;
+	color: var(--text-color);
+	background-color: var(--secondary-color);
+}
+
+.data-table th, .data-table td {
+	text-align: center;
+	vertical-align: middle;
+	border: 1px solid var(--border-color);
+	padding: 8px;
+}
+
+.data-table th {
+	background-color: #333;
+	font-weight: bold;
+	color: var(--accent-color);
+	cursor: pointer;
+	position: relative;
+}
+
+.data-table th span {
+	font-size: 14px;
+	margin-left: 5px;
+}
+
+.data-table th.asc::after {
+	content: ' ↑';
+}
+
+.data-table th.desc::after {
+	content: ' ↓';
+}
+
+.data-table tr:hover {
+	background-color: #3a3a3a;
+}
+
+.button_in_line {
+	scale: 65%;
+}

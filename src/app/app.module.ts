@@ -20,8 +20,13 @@ import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { MatOptionModule } from '@angular/material/core';
 import { MatButtonModule } from '@angular/material/button';
-import {HeaderComponent} from '../header/header.component';
-import {EditSpaceMarineComponent} from '../edit-space-marine/edit-space-marine.component';
+import { HeaderComponent } from '../header/header.component';
+import { EditSpaceMarineComponent } from '../edit-space-marine/edit-space-marine.component';
+import { MatIconModule } from '@angular/material/icon';
+import { MatButtonToggleModule } from '@angular/material/button-toggle';
+import { MatTableModule } from '@angular/material/table';
+import { MatSortModule } from '@angular/material/sort';
+import { MatPaginatorModule } from '@angular/material/paginator';
 
 @NgModule({
 	imports: [
@@ -39,16 +44,20 @@ import {EditSpaceMarineComponent} from '../edit-space-marine/edit-space-marine.c
 		MatSelectModule,
 		MatOptionModule,
 		MatButtonModule,
+		MatIconModule,
+		MatButtonToggleModule,
+		MatTableModule,
+		MatSortModule,
+		MatPaginatorModule,
 	],
 	declarations: [
 		AppComponent,
 		SignInComponent,
 		SignUpComponent,
-		HomeComponent,
 		ControlPanelComponent,
 		CreateSpaceMarineComponent,
 		EditSpaceMarineComponent,
-		HeaderComponent
+		HeaderComponent,
 	],
 	providers: [
 		provideHttpClient(),

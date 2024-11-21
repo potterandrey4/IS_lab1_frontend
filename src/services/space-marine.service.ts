@@ -9,11 +9,18 @@ import {WebSocketSubject} from 'rxjs/webSocket';
 })
 export class SpaceMarineService {
 	private baseUrl = 'http://localhost:8080/space-marine';
-	private socket: WebSocketSubject<any>; // для WebSocket
+	private socket: WebSocketSubject<any>;
 
 	constructor(private http: HttpClient) {
-		// Подключение к WebSocket серверу
-		this.socket = new WebSocketSubject('ws://localhost:8080/socket');
+		this.socket = new WebSocketSubject({
+			url: 'ws://localhost:8080/ws',
+			openObserver: {
+				next: () => console.log('WebSocket connection established')
+			},
+			closeObserver: {
+				next: () => console.log('WebSocket connection closed')
+			}
+		});
 	}
 
 	private getHeaders(): HttpHeaders {
@@ -29,8 +36,7 @@ export class SpaceMarineService {
 	}
 
 	getUserSpaceMarines(): Observable<SpaceMarine[]> {
-		const options = { headers: this.getHeaders() };
-		return this.http.post<SpaceMarine[]>(`${this.baseUrl}/user-objects`, null, options);
+		return this.http.post<SpaceMarine[]>(`${this.baseUrl}/user-objects`, null, {headers: this.getHeaders()});
 	}
 
 	getSpaceMarinesUpdates(): Observable<SpaceMarine[]> {
@@ -38,14 +44,13 @@ export class SpaceMarineService {
 	}
 
 	getSpaceMarineById(id: number): Observable<any> {
-		const options = { headers: this.getHeaders() };
-		return this.http.post(`${this.baseUrl}/get/${id}`, null, options);
+		return this.http.post(`${this.baseUrl}/get/${id}`, null, {headers: this.getHeaders()});
 	}
 
 	add(formData: any): Observable<any> {
 		return this.http.post(`${this.baseUrl}/add`, formData, {headers: this.getHeaders()}).pipe(
 			tap(() => {
-				this.socket.next('update');
+				this.socket.next('add');
 			})
 		);
 	}
@@ -58,11 +63,10 @@ export class SpaceMarineService {
 		);
 	}
 
-
 	delete(id: number): Observable<any> {
 		return this.http.delete(`${this.baseUrl}/delete/${id}`, {headers: this.getHeaders()}).pipe(
 			tap(() => {
-				this.socket.next('update');
+				this.socket.next('delete');
 			})
 		);
 	}
