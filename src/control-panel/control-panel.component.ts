@@ -5,7 +5,8 @@ import { SpaceMarineService } from '../services/space-marine.service';
 import { SpaceMarine } from '../models/space-marine.model';
 import {FormsModule} from '@angular/forms';
 import {NgForOf, NgIf} from '@angular/common';
-import {AdminAuthService} from '../admin/admin-auth.service';
+import {AdminService} from '../admin/admin.service';
+import {AuthService} from '../services/auth.service';
 
 @Component({
 	selector: 'app-control-panel',
@@ -23,10 +24,14 @@ export class ControlPanelComponent implements OnInit {
 	nameSubstring: string = '';
 	isAdmin: boolean = false;
 
-	constructor(private router: Router, private spaceMarineService: SpaceMarineService, private adminAuthService: AdminAuthService) {}
+	constructor(private router: Router,
+				private spaceMarineService: SpaceMarineService,
+				private authService: AuthService) {}
 
 	ngOnInit(): void {
-		this.isAdmin = this.adminAuthService.isAdmin();
+		this.authService.isAdminIn$.subscribe((isAdmin) => {
+			this.isAdmin = isAdmin;
+		});
 	}
 
 	create_space_marine() {

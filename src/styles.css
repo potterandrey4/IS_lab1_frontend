@@ -60,6 +60,11 @@ button:active {
 	transform: translateY(2px);
 }
 
+.home-container {
+	margin-top: 80px;
+	padding: 20px;
+}
+
 .container {
 	max-width: 80%;
 	margin: 5% auto;

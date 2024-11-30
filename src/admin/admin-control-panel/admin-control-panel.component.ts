@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { AdminAuthService } from '../admin-auth.service';
+import { AdminService } from '../admin.service';
 import { NgForOf } from '@angular/common';
 import { Observable } from 'rxjs';
 
@@ -12,18 +12,18 @@ import { Observable } from 'rxjs';
 export class AdminControlPanelComponent {
 	pendingApplications: any[] = [];
 
-	constructor(private adminAuthService: AdminAuthService) {
+	constructor(private adminAuthService: AdminService) {
 		this.loadPendingApplications();
 	}
 
 	loadPendingApplications() {
-		const token = localStorage.getItem('token');
-		if (!token) {
+		const authToken = localStorage.getItem('authToken');
+		if (!authToken) {
 			alert('Вы не авторизованы');
 			return;
 		}
 
-		this.adminAuthService.getPendingApplications(token).subscribe({
+		this.adminAuthService.getPendingApplications(authToken).subscribe({
 			next: (applications) => {
 				this.pendingApplications = applications;
 			},

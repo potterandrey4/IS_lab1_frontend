@@ -1,5 +1,5 @@
 import {Component} from '@angular/core';
-import {AdminAuthService} from '../admin-auth.service';
+import {AdminService} from '../admin.service';
 import {
 	AbstractControl,
 	FormBuilder,
@@ -31,7 +31,7 @@ export class AdminSignupComponent {
 
 	constructor(
 		private authService: AuthService,
-		private adminAuthService: AdminAuthService,
+		private adminAuthService: AdminService,
 		private router: Router,
 		private toastr: ToastrService,
 		private fb: FormBuilder

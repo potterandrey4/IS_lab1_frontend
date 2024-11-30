@@ -14,10 +14,10 @@ import {AdminSignupComponent} from '../admin/admin-signup/admin-signup.component
 import {AdminControlPanelComponent} from '../admin/admin-control-panel/admin-control-panel.component';
 
 export const routes: Routes = [
-	{path: '', component: HomeComponent},
 	{path: 'login', component: SignInComponent},
 	{path: 'signup', component: SignUpComponent},
 
+	{path: '', component: HomeComponent, canActivate: [AuthGuard]},
 	{path: 'control-panel', component: ControlPanelComponent, canActivate: [AuthGuard]},
 	{path: 'control-panel/create-space-marine', component: CreateSpaceMarineComponent, canActivate: [AuthGuard]},
 	{path: 'control-panel/create-chapter', component: CreateChapterComponent, canActivate: [AuthGuard]},

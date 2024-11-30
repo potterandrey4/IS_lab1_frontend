@@ -20,9 +20,7 @@ export class AuthService {
 	public isAdminIn$ = this.isAdminSubject.asObservable();
 
 
-	constructor(private http: HttpClient, private toastr: ToastrService) {
-		this.verifyAdminStatus();
-	}
+	constructor(private http: HttpClient, private toastr: ToastrService) {}
 
 	login(formData: any): Observable<any> {
 		return this.http.post(`${this.apiUrl}/signin`, formData);
@@ -69,43 +67,25 @@ export class AuthService {
 
 		const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
 
-		return this.http.post(`${this.apiUrl}/verify-token`, {}, { headers }).pipe(
+		return this.http.post<{ role: string }>(`${this.apiUrl}/verify-token`, {}, { headers }).pipe(
 			timeout(5000),
-			map((response: any) => {
+			map((response) => {
 				this.loggedInSubject.next(true);
+				this.isAdminSubject.next(response.role === 'admin');
 				return true;
 			}),
 			catchError((error) => {
-				if (error.name === 'TimeoutError') {
+				if (error.status === 401) {
+					this.logout();
+				} else if (error.name === 'TimeoutError') {
 					this.toastr.error('Сервер не отвечает. Превышено время ожидания.', 'Ошибка верификации токена:');
 				} else {
 					this.toastr.error('Ошибка верификации токена');
-					this.loggedInSubject.next(false);
 				}
 				return of(false);
 			})
 		);
 	}
-
-	verifyAdminStatus(): void {
-		const token = this.getToken();
-		if (!token) {
-			this.isAdminSubject.next(false); // Если нет токена, значит, нет администратора
-			return;
-		}
-
-		const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
-		this.http.post<{ isAdmin: boolean }>(`${this.apiUrl}/user-status`, { headers }).pipe(
-			map((response) => {
-				this.isAdminSubject.next(response.isAdmin);
-			}),
-			catchError((error) => {
-				this.isAdminSubject.next(false);
-				return of(null);
-			})
-		).subscribe();
-	}
-
 	getCurrentUserName(): string | null {
 		return this.nameSubject.getValue();
 	}

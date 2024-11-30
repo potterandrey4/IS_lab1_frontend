@@ -120,6 +120,7 @@ export class HomeComponent implements OnInit, OnDestroy {
 			this.dataSource.filter = input.value.trim().toLowerCase();
 		}
 	}
+
 	sortTable(column: string): void {
 		this.dataSource.sort = this.sort;
 	}
